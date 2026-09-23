@@ -46,50 +46,30 @@ source_registry:
       source_type: human_interview
       date: "2026-09-15"
       role: 대형 입시학원 수능 수학 강사
-      course: 수학Ⅱ_미분_그래프
-      ai_processing: 문장_정리와_CSV_구조화
-      legacy_csv_id: SIM-01
-      provenance_confirmed_on: "2026-09-23"
       supports: [경계값_검토, 독립풀이, 조건_추가, 체감난도_미확인]
     H04:
       log_ref: "로그 4"
       source_type: human_interview
       date: "2026-09-15"
       role: 고등 수학 강사_프리랜서 문항 납품자
-      course: 미적분_수열의극한_급수
-      ai_processing: 문장_정리와_CSV_구조화
-      legacy_csv_id: SIM-05
-      provenance_confirmed_on: "2026-09-23"
       supports: [증명_빈틈, AI검토_한계, 조건_충분성, 보류]
     H05:
       log_ref: "로그 5"
       source_type: human_interview
       date: "2026-09-15"
       role: 수능 수학 강사_모의고사 팀 책임자
-      course: 수학Ⅱ_적분_넓이
-      ai_processing: 문장_정리와_CSV_구조화
-      legacy_csv_id: SIM-06
-      provenance_confirmed_on: "2026-09-23"
       supports: [회차_배치, 계산량, 버전_관리, 학생검증_부재]
     H06:
       log_ref: "로그 6"
       source_type: human_interview
       date: "2026-09-15"
       role: 중형 학원 고등 수학 강사
-      course: 수학Ⅱ_미분가능성
-      ai_processing: 문장_정리와_CSV_구조화
-      legacy_csv_id: SIM-09
-      provenance_confirmed_on: "2026-09-23"
       supports: [핵심보존_실패, 첫접근_단서, 그래프_교점, 보류]
     H07:
       log_ref: "로그 7"
       source_type: human_interview
       date: "2026-09-15"
       role: 독립 교재 집필자_미적분 강사
-      course: 미적분_합성함수_역함수
-      ai_processing: 문장_정리와_CSV_구조화
-      legacy_csv_id: SIM-10
-      provenance_confirmed_on: "2026-09-23"
       supports: [정의역, 별해, 경계조건, 독립검토]
 
   artifact_cases:
