@@ -1,35 +1,364 @@
-# Aleph 미니 도메인 온톨로지 (강의 2 산출물 ②)
+# Aleph 미니 도메인 온톨로지
 #
-# 작성 지침: docs/guides/강의02_도메인발견_온톨로지_작성지침.md
-# 근거 원천: docs/research/interviews.md
+# 이 파일은 인터뷰에서 발견한 업무 개념과 math-report 개발팀의 기존 도메인 모델을
+# 하나의 그래프로 정렬한 것이다. 구현에 이미 존재하는 이름을 우선 대표어로 사용한다.
 #
-# ── 절대 규칙 ────────────────────────────────────────────────────────────
-# 1. evidence: 는 docs/research/interviews.md 의 로그 번호(관찰 기록은 '관찰 N').
-#    클래스 / 속성 / 관계 세 층 전부에 붙인다.
-#    근거로 역추적되지 않는 항목은 두지 않는다.
-# 2. relations 의 대상은 반드시 이 파일에 정의된 클래스여야 한다(미정의 클래스 참조 금지).
-# 3. 동의어는 대표어 하나로 합친다. 대표어가 흔들리면 스펙·코드·테스트가 어긋난다.
-# 4. 여기서 정의하는 것은 클래스(개념 유형)다.
-#    개별 사례(특정 기출 문항, 특정 해설)는 인스턴스이자 데이터이므로 정의하지 않는다.
-# ─────────────────────────────────────────────────────────────────────────
+# 출처 필드
+# - evidence: 실제 사람에게 받은 인터뷰 로그
+# - artifact_evidence: 실제 프로젝트 검수 장부에서 역추적한 과거 사건
+# - implementation_source: 개발팀 코드·검수 데이터·인스턴스 데이터
+# - design_source: 팀이 정한 제품 범위와 Main-Sketch-Addition 구조
 #
-# ── 작성 전 중간 단계 (로그가 쌓인 뒤 채운다) ────────────────────────────
-# 반복된 명사 → 클래스·속성 후보:
-# 반복된 동사 → 관계 후보:
-# 동의어 통합:            =            → 대표어 ``
-# ─────────────────────────────────────────────────────────────────────────
+# 네 출처는 서로 대체하거나 합산하지 않는다.
 
-version: 1
+version: 2
+
+metadata:
+  name: Aleph 문항 의미·연계 생성·검증 온톨로지
+  status: accepted_for_project_use
+  approved_on: "2026-09-23"
+  last_updated: "2026-09-23"
+  canonical_model: "math-report metadata_schema.py semantic-v7"
+  principles:
+    - 원문에서 확인 가능한 사실과 해석한 의미를 분리한다.
+    - 수학 개념, 표현, 풀이 메커니즘을 서로 다른 축으로 관리한다.
+    - 생성기에는 원문 전체가 아니라 DonorCard만 노출한다.
+    - 세부 풀이 메커니즘은 자유 텍스트가 아니라 폐쇄형 MechanismCode를 사용한다.
+    - 검수 결과는 원본 검증 상태와 생성 후보 피드백을 구분해 저장한다.
+    - AI로 문장과 CSV를 정리했더라도 원응답자가 실존하고 출처가 확인되면 human_interview로 관리한다.
+
+source_registry:
+  human_interviews:
+    H01:
+      log_ref: "로그 1"
+      source_type: human_interview
+      date: "2026-09-12"
+      role: 문항 검토 및 해설 작성자
+      supports: [조건_검토, 반례_탐색, 교육과정_준수, 제작의도_보존, 채택_보류_폐기]
+    H02:
+      log_ref: "로그 2"
+      source_type: human_interview
+      date: "2026-09-16"
+      role: 수학 문항 제작자
+      supports: [정답상황_역설계, 조건_설계, 풀이단계, 타인_AI검토, 의도치않은_풀이]
+    H03:
+      log_ref: "로그 3"
+      source_type: human_interview
+      date: "2026-09-15"
+      role: 대형 입시학원 수능 수학 강사
+      course: 수학Ⅱ_미분_그래프
+      ai_processing: 문장_정리와_CSV_구조화
+      legacy_csv_id: SIM-01
+      provenance_confirmed_on: "2026-09-23"
+      supports: [경계값_검토, 독립풀이, 조건_추가, 체감난도_미확인]
+    H04:
+      log_ref: "로그 4"
+      source_type: human_interview
+      date: "2026-09-15"
+      role: 고등 수학 강사_프리랜서 문항 납품자
+      course: 미적분_수열의극한_급수
+      ai_processing: 문장_정리와_CSV_구조화
+      legacy_csv_id: SIM-05
+      provenance_confirmed_on: "2026-09-23"
+      supports: [증명_빈틈, AI검토_한계, 조건_충분성, 보류]
+    H05:
+      log_ref: "로그 5"
+      source_type: human_interview
+      date: "2026-09-15"
+      role: 수능 수학 강사_모의고사 팀 책임자
+      course: 수학Ⅱ_적분_넓이
+      ai_processing: 문장_정리와_CSV_구조화
+      legacy_csv_id: SIM-06
+      provenance_confirmed_on: "2026-09-23"
+      supports: [회차_배치, 계산량, 버전_관리, 학생검증_부재]
+    H06:
+      log_ref: "로그 6"
+      source_type: human_interview
+      date: "2026-09-15"
+      role: 중형 학원 고등 수학 강사
+      course: 수학Ⅱ_미분가능성
+      ai_processing: 문장_정리와_CSV_구조화
+      legacy_csv_id: SIM-09
+      provenance_confirmed_on: "2026-09-23"
+      supports: [핵심보존_실패, 첫접근_단서, 그래프_교점, 보류]
+    H07:
+      log_ref: "로그 7"
+      source_type: human_interview
+      date: "2026-09-15"
+      role: 독립 교재 집필자_미적분 강사
+      course: 미적분_합성함수_역함수
+      ai_processing: 문장_정리와_CSV_구조화
+      legacy_csv_id: SIM-10
+      provenance_confirmed_on: "2026-09-23"
+      supports: [정의역, 별해, 경계조건, 독립검토]
+
+  artifact_cases:
+    source_type: project_review_record
+    may_count_as_human_interview: false
+    source: DEV-FEEDBACK
+    cases:
+      A01: {code: E0003, problem: 공통13, category: 변형부족, verdict: revise}
+      A02: {code: E0008, problem: 공통14, category: 후보중복, verdict: reject}
+      A03: {code: E0009, problem: 공통15, category: 타당성결함, verdict: reject}
+      A04: {code: E0010, problem: 공통15, category: 과변형, verdict: reject}
+      A05: {code: E0017, problem: 공통22, category: 교육과정위반, verdict: revise}
+      A06: {code: E0022, problem: 미적28, category: 타당성결함, verdict: revise}
+      A07: {code: E0027, problem: 미적29, category: 변형부족, verdict: reject}
+      A08: {code: E0032, problem: 미적30, category: 조건미세조정, verdict: minor}
+
+  implementation_sources:
+    DEV-SCHEMA:
+      source_type: python_schema
+      path: ../math-report/math-report/3_코드/문항은행/metadata_schema.py
+      authority: canonical
+      provides: [ProblemFacts, SolutionStepFact, ProblemSemantics, DonorCard, DifficultyProfile, enum_codes]
+    DEV-TAXONOMY:
+      source_type: python_taxonomy
+      path: ../math-report/math-report/3_코드/문항은행/mechanism_taxonomy.py
+      authority: canonical
+      provides: [MechanismCode, MechanismFamily, ordered_family_signature]
+    DEV-GOLD48:
+      source_type: human_audited_instances
+      path: ../math-report/math-report/3_코드/문항은행/calibration_gold_48_v3.json
+      authority: verified_instances
+      provides: [48개_승인_문항, decisive_strategy, step_mechanisms, donor_status]
+    DEV-QUESTION-DB:
+      source_type: structured_source_questions
+      path: ../math-report/math-report/1_입력/문항DB/mock2027_서바13회_db.json
+      authority: source_instances
+      provides: [question_fields, statement, answer, solution, course_code, unit, source]
+    DEV-FEEDBACK:
+      source_type: review_ledger
+      path: ../math-report/math-report/1_입력/문항DB/feedback_ledger.yaml
+      authority: reviewed_generation_results
+      provides: [feedback_category, severity, verdict, directive, target_condition]
+    DEV-FEWSHOT:
+      source_type: transformation_examples
+      path: ../math-report/math-report/2_기준/few-shot/addition_fewshot.json
+      authority: curated_examples
+      provides: [main, additions, borrowed_seed, object_change, new_conditions]
+
+  design_sources:
+    D01:
+      source_type: project_document
+      ref: README.md
+      provides: [핵심_풀이_아이디어_추출, 연계문항_생성, 자동검증]
+    D02:
+      source_type: team_decision
+      ref: "2027 Artist 1~6회 Main Question / Main-Sketch-Addition"
+      provides: [ProblemFamily, variant_role, source_scope]
+    D03:
+      source_type: research_protocol
+      ref: docs/research/interviews.md
+      provides: [실제_로그, AI_정리_출처, 난도_구분, 페인]
+
+# 대표어 통합
+# - SourceQuestion / LinkedQuestion / Main / Sketch / Addition -> Question.variant_role
+# - 핵심 풀이 아이디어 / 풀이 전략 -> decisive SolutionStep의 MechanismCode 순서열
+# - 검토 결과 / 오류 / 피드백 -> ValidationResult
+# - 채택 가능 원문 / 생성용 카드 -> DonorCard
+# - 원문에서 추출한 사실 -> ProblemFacts
+# - 사실에 부여한 개념·표현·메커니즘 분류 -> ProblemSemantics
 
 classes:
-  # <클래스명>:
-  #   description: <이 개념이 무엇인지 한 줄>
-  #   evidence: [로그 _, 로그 _]                                   # ① 클래스의 근거 (필수)
-  #   attributes:
-  #     <속성명>: {type: <타입>, examples: [<예시>], evidence: [로그 _]}   # ② 속성의 근거
-  #   relations:
-  #     - <관계(동사)>: <대상 클래스>                              # 반드시 이 파일에 정의된 클래스
-  #       evidence: [로그 _]                                       # ③ 관계의 근거
+  Question:
+    description: 원본, Main, Sketch, Addition을 모두 표현하는 수학 문항
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08]
+    implementation_source: [DEV-QUESTION-DB, DEV-FEWSHOT]
+    design_source: [D01, D02]
+    attributes:
+      problem_id: {type: string, key: true, implementation_source: [DEV-SCHEMA, DEV-QUESTION-DB]}
+      variant_role: {type: enum, values: [MAIN, SKETCH, ADDITION], nullable: true, implementation_source: [DEV-FEWSHOT], design_source: [D02]}
+      part: {type: string, nullable: true, implementation_source: [DEV-QUESTION-DB]}
+      number: {type: integer, nullable: true, implementation_source: [DEV-QUESTION-DB]}
+      points: {type: integer, nullable: true, implementation_source: [DEV-QUESTION-DB]}
+      answer_type: {type: string, implementation_source: [DEV-QUESTION-DB]}
+      statement: {type: string, implementation_source: [DEV-QUESTION-DB]}
+      answer: {type: string, nullable: true, implementation_source: [DEV-QUESTION-DB]}
+      solution: {type: string, nullable: true, implementation_source: [DEV-QUESTION-DB]}
+      course_code: {type: enum, values: [MATH1, MATH2, CALCULUS], implementation_source: [DEV-SCHEMA, DEV-QUESTION-DB]}
+      unit: {type: string, implementation_source: [DEV-QUESTION-DB]}
+      figure: {type: boolean, implementation_source: [DEV-QUESTION-DB]}
+      source_ref: {type: object, implementation_source: [DEV-QUESTION-DB]}
+      solution_format: {type: string, examples: [LaTeX], implementation_source: [DEV-QUESTION-DB]}
+    relations:
+      - has_facts: ProblemFacts
+        evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+        implementation_source: [DEV-SCHEMA]
+      - has_semantics: ProblemSemantics
+        implementation_source: [DEV-SCHEMA, DEV-GOLD48]
+      - receives: ValidationResult
+        evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+        artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08]
+        implementation_source: [DEV-FEEDBACK]
+      - derived_from: Question
+        artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08]
+        implementation_source: [DEV-FEWSHOT]
+        design_source: [D01, D02]
 
-# 범위 밖(명시): <이번 개발 범위에서 다루지 않을 개념>
-# 핵심 흐름: <클래스> --(동사)--> <클래스> --(동사)--> <클래스>
+  ProblemFamily:
+    description: 하나의 Main 문항과 같은 전이 핵심을 공유하는 Sketch·Addition 문항의 묶음
+    evidence: []
+    implementation_source: [DEV-FEWSHOT]
+    design_source: [D02]
+    evidence_status: implementation_and_design
+    attributes:
+      family_id: {type: string, key: true, design_source: [D02]}
+      title: {type: string, design_source: [D02]}
+      source_scope: {type: string, examples: ["2027 Artist 1~6회 Main Question"], design_source: [D02]}
+      shared_mechanism_signature: {type: list, item_type: MechanismCode, implementation_source: [DEV-SCHEMA, DEV-TAXONOMY, DEV-GOLD48]}
+    relations:
+      - has_main: Question
+        implementation_source: [DEV-FEWSHOT]
+        design_source: [D02]
+      - contains: Question
+        implementation_source: [DEV-FEWSHOT]
+        design_source: [D02]
+      - governed_by: DonorCard
+        implementation_source: [DEV-SCHEMA, DEV-FEWSHOT]
+
+  ProblemFacts:
+    description: 문제와 승인 해설에서 근거 ID를 인용해 추출한 해석 전 사실 계층
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A03, A05, A06, A08]
+    implementation_source: [DEV-SCHEMA]
+    attributes:
+      schema_version: {type: literal, value: facts-v4, implementation_source: [DEV-SCHEMA]}
+      objects: {type: list, item_fields: [abstract_object, evidence_ids], implementation_source: [DEV-SCHEMA]}
+      conditions: {type: list, item_fields: [condition_id, abstract_condition, evidence_ids], evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA]}
+      target: {type: object, fields: [abstract_target, evidence_ids], implementation_source: [DEV-SCHEMA]}
+      bottleneck_summary: {type: string, evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA]}
+      visual_dependency: {type: enum, values: [NONE, PROBLEM, SOLUTION, BOTH, UNCERTAIN], implementation_source: [DEV-SCHEMA]}
+      warnings: {type: list, item_type: FactWarning, implementation_source: [DEV-SCHEMA]}
+      consistency_issues: {type: list, item_fields: [code, summary, problem_evidence_ids, solution_evidence_ids], evidence: ["로그 1"], implementation_source: [DEV-SCHEMA]}
+      confidence: {type: float, range: [0, 1], implementation_source: [DEV-SCHEMA]}
+    relations:
+      - describes: Question
+        implementation_source: [DEV-SCHEMA]
+      - has_step: SolutionStep
+        evidence: ["로그 1", "로그 2"]
+        implementation_source: [DEV-SCHEMA]
+      - interpreted_by: ProblemSemantics
+        implementation_source: [DEV-SCHEMA]
+
+  SolutionStep:
+    description: 승인 해설에서 추출한 하나의 풀이 행동과 그 결과 사실
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A03, A04, A06, A07]
+    implementation_source: [DEV-SCHEMA, DEV-GOLD48]
+    attributes:
+      step_id: {type: integer, range: [1, 8], implementation_source: [DEV-SCHEMA]}
+      abstract_action: {type: string, evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA]}
+      derived_fact: {type: string, implementation_source: [DEV-SCHEMA]}
+      pivotal: {type: boolean, evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+      evidence_ids: {type: list, pattern: "^(P|S)[0-9]{3}$", implementation_source: [DEV-SCHEMA]}
+      transferable: {type: boolean, implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+    relations:
+      - depends_on: SolutionStep
+        evidence: ["로그 1", "로그 2"]
+        implementation_source: [DEV-SCHEMA]
+      - uses: SolutionMechanism
+        evidence: ["로그 1", "로그 2"]
+        implementation_source: [DEV-SCHEMA, DEV-TAXONOMY, DEV-GOLD48]
+
+  ProblemSemantics:
+    description: ProblemFacts를 폐쇄형 개념·표현·조건 역할·풀이 메커니즘 코드로 분류한 의미 계층
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A01, A03, A04, A05, A06, A07]
+    implementation_source: [DEV-SCHEMA, DEV-GOLD48]
+    attributes:
+      schema_version: {type: literal, value: semantic-v7, implementation_source: [DEV-SCHEMA]}
+      primary_concept: {type: ConceptCode, implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+      support_concepts: {type: list, max_items: 3, item_type: ConceptCode, implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+      representations: {type: list, item_type: RepresentationCode, evidence: ["로그 2"], implementation_source: [DEV-SCHEMA]}
+      condition_roles: {type: list, item_fields: [condition_id, role, essential], evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA]}
+      target_code: {type: TargetCode, implementation_source: [DEV-SCHEMA]}
+      decisive_step_id: {type: integer, range: [1, 8], evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+      unit_alignment: {type: enum, values: [ALIGNED, CROSS_UNIT, QUESTIONABLE], implementation_source: [DEV-SCHEMA]}
+      difficulty_band: {type: enum, values: [BASIC, STANDARD, ADVANCED, VERY_HIGH, UNKNOWN], evidence: ["로그 1", "로그 2"], artifact_evidence: [A06], implementation_source: [DEV-SCHEMA]}
+      reasoning_load: {type: enum, values: [LOW, MEDIUM, HIGH], evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA]}
+      calculation_load: {type: enum, values: [LOW, MEDIUM, HIGH], evidence: ["로그 1"], implementation_source: [DEV-SCHEMA]}
+      case_load: {type: enum, values: [LOW, MEDIUM, HIGH], evidence: ["로그 1"], implementation_source: [DEV-SCHEMA]}
+      confidence: {type: float, range: [0, 1], implementation_source: [DEV-SCHEMA]}
+    relations:
+      - annotates: Question
+        implementation_source: [DEV-SCHEMA]
+      - classifies: SolutionStep
+        implementation_source: [DEV-SCHEMA, DEV-GOLD48]
+      - exposes: DonorCard
+        implementation_source: [DEV-SCHEMA]
+
+  SolutionMechanism:
+    description: 풀이 단계에서 작동하는 폐쇄형 세부 메커니즘과 그 상위 작동군
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A01, A03, A04, A06, A07]
+    implementation_source: [DEV-SCHEMA, DEV-TAXONOMY, DEV-GOLD48]
+    attributes:
+      code: {type: MechanismCode, enum_count: 35, implementation_source: [DEV-SCHEMA, DEV-TAXONOMY]}
+      family: {type: enum, values: [FAMILY_RELATION_TRANSFORM, FAMILY_STRUCTURE_CORRESPONDENCE, FAMILY_LIMIT_DOMAIN, FAMILY_CANDIDATE_SELECTION, FAMILY_COUNT_INTEGER, FAMILY_SEQUENCE_ACCUMULATION, FAMILY_SYMMETRY_PERIODIC, FAMILY_INTEGRAL_REDUCTION], implementation_source: [DEV-TAXONOMY]}
+      sequence_order: {type: integer, nullable: true, implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+    relations:
+      - belongs_to_step: SolutionStep
+        implementation_source: [DEV-SCHEMA, DEV-GOLD48]
+
+  DonorCard:
+    description: 생성기에 노출 가능한 원본 문항의 전이 핵심과 변경 의무를 담은 카드
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08]
+    implementation_source: [DEV-SCHEMA, DEV-GOLD48, DEV-FEWSHOT]
+    design_source: [D01, D02]
+    attributes:
+      core_transfer: {type: string, implementation_source: [DEV-SCHEMA, DEV-FEWSHOT]}
+      transferable_invariants: {type: list, min_items: 1, max_items: 2, implementation_source: [DEV-SCHEMA, DEV-FEWSHOT]}
+      solution_blueprint: {type: list, min_items: 2, max_items: 3, implementation_source: [DEV-SCHEMA]}
+      allowed_uses: {type: list, item_values: [MECHANISM, CONDITION_ARCHITECTURE, REPRESENTATION, FILTER, BOUNDARY_TRIGGER], implementation_source: [DEV-SCHEMA]}
+      must_change: {type: list, item_values: [SURFACE_OBJECT_CAST, SURFACE_CONDITION_TEMPLATE, SURFACE_TARGET_FORM, SURFACE_DIAGRAM_NOTATION], evidence: ["로그 1", "로그 2"], implementation_source: [DEV-SCHEMA, DEV-FEWSHOT]}
+      donor_status: {type: enum, values: [ELIGIBLE, REFERENCE_ONLY, HOLD, EXCLUDE], implementation_source: [DEV-SCHEMA, DEV-GOLD48]}
+      donor_reason: {type: string, implementation_source: [DEV-SCHEMA]}
+      evidence_ids: {type: list, pattern: "^(P|S)[0-9]{3}$", implementation_source: [DEV-SCHEMA]}
+    relations:
+      - derived_from: ProblemSemantics
+        implementation_source: [DEV-SCHEMA]
+      - guides_generation_of: Question
+        implementation_source: [DEV-SCHEMA, DEV-FEWSHOT]
+        design_source: [D01, D02]
+
+  ValidationResult:
+    description: 원본 검수 또는 생성 후보 검수에서 나온 상태, 실패 유형, 판정과 수정 지시
+    evidence: ["로그 1", "로그 2", "로그 3", "로그 4", "로그 5", "로그 6", "로그 7"]
+    artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08]
+    implementation_source: [DEV-SCHEMA, DEV-FEEDBACK]
+    attributes:
+      source_verification_status: {type: enum, values: [VERIFIED, VISUAL_REVIEW_REQUIRED, REVIEW_REQUIRED, REJECTED], nullable: true, evidence: ["로그 1"], implementation_source: [DEV-SCHEMA]}
+      consistency_codes: {type: list, item_type: ConsistencyCode, implementation_source: [DEV-SCHEMA]}
+      feedback_category: {type: enum, values: [변형부족, 과변형, 후보중복, 교육과정위반, 타당성결함, 조건미세조정], nullable: true, evidence: ["로그 1", "로그 2"], artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08], implementation_source: [DEV-FEEDBACK]}
+      severity: {type: enum, values: [low, medium, high], nullable: true, evidence: ["로그 1"], implementation_source: [DEV-FEEDBACK]}
+      verdict: {type: enum, values: [ok, minor, revise, reject], evidence: ["로그 1", "로그 2"], artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08], implementation_source: [DEV-FEEDBACK]}
+      target_condition: {type: string, nullable: true, evidence: ["로그 1", "로그 2"], implementation_source: [DEV-FEEDBACK]}
+      directive: {type: string, nullable: true, evidence: ["로그 1", "로그 2"], implementation_source: [DEV-FEEDBACK]}
+      reviewer_source: {type: enum, values: [human, ai_solver, symbolic_check, numeric_check], nullable: true, evidence: ["로그 1", "로그 2"], artifact_evidence: [A01, A02, A03, A04, A05, A06, A07, A08], design_source: [D01]}
+      timestamp: {type: datetime, nullable: true, implementation_source: [DEV-FEEDBACK]}
+    relations:
+      - evaluates: Question
+        evidence: ["로그 1", "로그 2"]
+        implementation_source: [DEV-FEEDBACK]
+      - checks: ProblemFacts
+        evidence: ["로그 1"]
+        implementation_source: [DEV-SCHEMA]
+      - may_change: DonorCard
+        implementation_source: [DEV-SCHEMA, DEV-FEEDBACK]
+
+# 범위 밖
+# - 원응답자와 출처가 확인되지 않은 자료를 사람 인터뷰 근거로 합산하는 것
+# - 원문 전체 또는 private fingerprint를 생성기에 직접 노출하는 것
+# - 공간도형·해설 그림의 자동 작도
+# - 실제 학생 결과가 없는데 정답률을 추정해 사실로 기록하는 것
+#
+# 핵심 그래프
+# ProblemFamily --(contains)--> Question
+# Question --(has_facts)--> ProblemFacts --(has_step)--> SolutionStep
+# SolutionStep --(uses)--> SolutionMechanism
+# Question --(has_semantics)--> ProblemSemantics --(exposes)--> DonorCard
+# DonorCard --(guides_generation_of)--> Question
+# Question --(receives)--> ValidationResult
