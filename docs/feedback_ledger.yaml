@@ -1,0 +1,650 @@
+meta:
+  rounds_ingested:
+  - 1
+  taxonomy:
+  - 변형부족
+  - 과변형
+  - 후보중복
+  - 교육과정위반
+  - 타당성결함
+  - 조건미세조정
+  last_source: 2027학년도_01회_외부AI_피드백.xlsx
+  classified_model: gpt-5.5
+problems:
+  공통13:
+    db_key: 공통 13
+    feedback:
+    - file: 공통13-2027R1_gpt_20260520_181157.html
+      source_id: 공통13
+      db_key: 공통 13
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T18:11:57'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통13-r1-c2_gpt_20260526_123527.html
+      source_id: 공통13
+      db_key: 공통 13
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-26T12:35:27'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통13-r1-c3_gpt_20260526_134639.html
+      source_id: 공통13
+      db_key: 공통 13
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:46:39'
+      code: E0003
+      sub: 1
+      raw: 접선의 기울기로 바꾼 건 괜찮지만 포장이 너무 똑같습니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: medium
+      verdict: revise
+      directive: 접선의 기울기 요소만 바꾸는 데 그치지 말고, 실근의 합 함수가 불연속이 되는 값과 우극한 차이를 제시하는 방식 자체를 바꿔라. 원본처럼 불연속점 하나와
+        점프값 하나로 곧바로 계수를 결정하게 만들지 마라.
+    - file: 공통13-r1-c4_gpt_20260526_135900.html
+      source_id: 공통13
+      db_key: 공통 13
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:59:00'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+  공통14:
+    db_key: 공통 14
+    feedback:
+    - file: 공통14-2027R1_gpt_20260520_181105.html
+      source_id: 공통14
+      db_key: 공통 14
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T18:11:05'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통14-r1-c2_gpt_20260526_123536.html
+      source_id: 공통14
+      db_key: 공통 14
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-26T12:35:36'
+      code: E0006
+      sub: 1
+      raw: (나) 조건만 다르게 제시되었으면 좋을 것 같습니다.
+      verdict_source: review
+      category: 조건미세조정
+      target_condition: (나)
+      severity: low
+      verdict: minor
+      directive: (나)의 두 각의 사인비 조건을 그대로 쓰지 말고, 같은 정보를 코사인비나 변의 길이비, 또는 넓이비로 우회해 제시하라. (가)의 길이 조건과 삼등분 구조는
+        유지해도 된다.
+    - file: 공통14-r1-c3_gpt_20260526_134455.html
+      source_id: 공통14
+      db_key: 공통 14
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:44:55'
+      code: E0007
+      sub: 1
+      raw: (나) 조건만 다르게 제시되었으면 좋을 것 같습니다.
+      verdict_source: review
+      category: 조건미세조정
+      target_condition: (나)
+      severity: low
+      verdict: minor
+      directive: (나)의 사인비 제시를 다른 형태로 바꿔라. 예를 들어 각 DAE, CAE의 직접적인 사인비 대신 삼각형 ADE와 ACE의 넓이비나 특정 선분비를 통해
+        같은 각 정보를 유도하게 하라.
+    - file: 공통14-r1-c4_gpt_20260526_135218.html
+      source_id: 공통14
+      db_key: 공통 14
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:52:18'
+      code: E0008
+      sub: 1
+      raw: 상황이 c2와 너무 흡사합니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: medium
+      verdict: reject
+      directive: c2와 같은 삼등분 배치와 외접원 교점 상황을 반복하지 마라. D, E의 역할이나 구하려는 선분을 바꾸고, 각 조건도 c2와 다른 기하 관계로 새로 구성하라.
+  공통15:
+    db_key: 공통 15
+    feedback:
+    - file: 공통15-2027R1_gpt_20260520_202247.html
+      source_id: 공통15
+      db_key: 공통 15
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T20:22:47'
+      code: E0009
+      sub: 2
+      raw: (가) 조건은 써먹을 수가 없습니다. 실질 (나)와 (다)만 남는데 그렇게 되면 문제의 퀄리티가 아쉽습니다.
+      verdict_source: review
+      category: 타당성결함
+      target_condition: (가)
+      severity: high
+      verdict: reject
+      directive: (가)가 실제로 삼차함수의 계수나 조각함수의 접속 조건을 결정하도록 다시 설계하라. 풀이에서 (가)를 버리고 (나), (다)만으로 진행될 수 없게 만들어라.
+    - file: 공통15-r1-c2v2_gpt_20260526_134232.html
+      source_id: 공통15
+      db_key: 공통 15
+      variant_tag: r1-c2v2
+      track: variant
+      round: 1
+      candidate: 2
+      version: 2
+      timestamp: '2026-05-26T13:42:32'
+      code: E0010
+      sub: 1
+      raw: 개별적인 문제로서는 좋습니다만, 원본 문제의 특성이 거의 남아 있지 않습니다. 특히 조각함수라는 것과 (가) 조건이 문제의 핵심인데 그 부분이 완전히 사라져서 연계
+        문제로 보기는 어려울 듯합니다.
+      verdict_source: review
+      category: 과변형
+      target_condition: (가)
+      severity: high
+      verdict: reject
+      directive: 원본의 핵심인 조각함수 정의와 0 근방의 극한 조건을 반드시 남겨라. 단순한 삼차함수 조건 문제로 바꾸지 말고, 좌우 조각의 관계를 이용해야만 계수가 정해지게
+        구성하라.
+    - file: 공통15-r1-c3_gpt_20260526_135332.html
+      source_id: 공통15
+      db_key: 공통 15
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:53:32'
+      code: E0011
+      sub: 1
+      raw: 첫부분은 충분히 좋았습니다만 (가) 조건이 너무 정확하게 똑같아서 그 부분이 조금 아쉽습니다. 포장만 조금 더 바뀌면 좋을 것 같습니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: (가)
+      severity: medium
+      verdict: revise
+      directive: (가)의 극한식 형태를 원본과 똑같이 쓰지 마라. 0 근방의 좌우 조각을 비교한다는 핵심은 유지하되, 분자나 기준점, 우변의 도함수 값을 다른 표현으로
+        바꿔 제시하라.
+    - file: 공통15-r1-c4_gpt_20260526_135211.html
+      source_id: 공통15
+      db_key: 공통 15
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:52:11'
+      code: E0012
+      sub: 1
+      raw: 아마 원본의 후반부 계산을 보존한 변형문항 같은데 중요한 부분들은 앞부분이기 때문에 문제의 의미가 많이 퇴색됐습니다.
+      verdict_source: review
+      category: 과변형
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 후반부 계산만 보존하지 말고, 조각함수와 0에서의 극한 조건이 풀이의 출발점이 되도록 다시 만들어라. 원본의 핵심인 앞부분 조건 없이 단순 계산형으로 귀결되게
+        하지 마라.
+  공통21:
+    db_key: 공통 21
+    feedback:
+    - file: 공통21-2027R1_gpt_20260520_181107.html
+      source_id: 공통21
+      db_key: 공통 21
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T18:11:07'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통21-r1-c1_gpt_20260527_233258.html
+      source_id: 공통21
+      db_key: 공통 21
+      variant_tag: r1-c1
+      track: variant
+      round: 1
+      candidate: 1
+      version: null
+      timestamp: '2026-05-27T23:32:58'
+      code: E0014
+      sub: 1
+      raw: 공차를 1이 아니라 자연수로 확장한 부분은 좋았습니다만 나머지 부분이 너무 흡사합니다. 조건 제시가 다른 변형문항을 카피하고 있으니 그 부분도 확인하면 좋을 듯합니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: medium
+      verdict: revise
+      directive: 공차를 자연수로 확장한 것 외에도 적분방정식의 세 근 조건을 제시하는 방식을 바꿔라. 원본처럼 f(0), 최고차항, f(-3)의 배수 조건을 거의 그대로
+        두지 말고, 계수 결정용 보조 조건과 최종 대입값을 새로 설정하라.
+    - file: 공통21-r1-c2_gpt_20260527_232955.html
+      source_id: 공통21
+      db_key: 공통 21
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-27T23:29:55'
+      code: E0015
+      sub: 1
+      raw: r1-c1과 동일한 문제입니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: r1-c1과 동일한 구조를 재사용하지 마라. 등차수열의 공차 확장 외에 근들의 위치 관계나 적분 구간, 최종적으로 구하는 값을 r1-c1과 명확히 다르게
+        새로 구성하라.
+    - file: 공통_21_gpt_20260527_170015.html
+      source_id: 공통21
+      db_key: 공통 21
+      variant_tag: ''
+      track: direct
+      round: null
+      candidate: null
+      version: null
+      timestamp: '2026-05-27T17:00:15'
+      code: E0020
+      sub: 1
+      raw: '''공차가 1인 등차수열''은 원본에 존재하는 이상 직접적으로 똑같이 제시되어선 변형 문제라 하기 어렵습니다.'
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 원본의 '공차가 1인 등차수열' 조건을 그대로 쓰지 마라. 공차를 미지의 자연수로 두거나 세 근의 합·곱 조건으로 바꾸고, 그에 맞춰 f(-3)의 배수
+        조건도 함께 재설계하라.
+  공통22:
+    db_key: 공통 22
+    feedback:
+    - file: 공통22-2027R1_gpt_20260520_203059.html
+      source_id: 공통22
+      db_key: 공통 22
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T20:30:59'
+      code: E0016
+      sub: 2
+      raw: 푸는 입장에서 답이 되는 경우가 너무 뻔히 보입니다.
+      verdict_source: review
+      category: 타당성결함
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 대입 후보가 풀이 초반에 바로 드러나지 않도록 수치 조건을 다시 잡아라. 직사각형의 중심, 길이, 두 기울기 조건이 한 경우만 노골적으로 가리키지 않게
+        중간 계산을 거치도록 조정하라.
+    - file: 공통22-r1-c2_gpt_20260526_123904.html
+      source_id: 공통22
+      db_key: 공통 22
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-26T12:39:04'
+      code: E0017
+      sub: 1
+      raw: 수심은 고교과정에 없어서 그 부분이 애매합니다.
+      verdict_source: review
+      category: 교육과정위반
+      target_condition: null
+      severity: high
+      verdict: revise
+      directive: '''수심''이라는 용어를 사용하지 마라. 필요한 경우 세 높이의 교점이라고 풀어 쓰거나, 직각·기울기·수직 조건만으로 고교 교육과정 안에서 표현하라.'
+    - file: 공통22-r1-c3_gpt_20260526_134328.html
+      source_id: 공통22
+      db_key: 공통 22
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:43:28'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통22-r1-c4_gpt_20260526_135638.html
+      source_id: 공통22
+      db_key: 공통 22
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:56:38'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 공통_22_gpt_20260527_170241.html
+      source_id: 공통22
+      db_key: 공통 22
+      variant_tag: ''
+      track: direct
+      round: null
+      candidate: null
+      version: null
+      timestamp: '2026-05-27T17:02:41'
+      code: E0021
+      sub: 1
+      raw: 문제 자체는 정상적이나 원본의 흔적이 없습니다.
+      verdict_source: review
+      category: 과변형
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 원본의 두 지수함수 그래프 위 네 점과 직사각형 조건을 다시 포함하라. 중심 좌표, 변의 길이, 두 직선의 기울기를 이용해 a, b, c를 결정하는 구조를
+        남겨라.
+  미적28:
+    db_key: 미적 28
+    feedback:
+    - file: 미적28-r1-c1_gpt_20260527_232841.html
+      source_id: 미적28
+      db_key: 미적 28
+      variant_tag: r1-c1
+      track: variant
+      round: 1
+      candidate: 1
+      version: null
+      timestamp: '2026-05-27T23:28:41'
+      code: E0022
+      sub: 1
+      raw: 적당히 약화된 문제 느낌입니다.
+      verdict_source: review
+      category: 타당성결함
+      target_condition: null
+      severity: low
+      verdict: revise
+      directive: 원본보다 단순히 약화된 형태로 끝내지 말고, 두 교점이 하나로 합쳐지는 임계 t와 그 이후의 x좌표 차이를 모두 활용하게 하라. g(t)의 미분 계산이
+        단순 확인이 아니라 핵심 단계가 되도록 조건을 보강하라.
+    - file: 미적28-r1-c2_gpt_20260527_232841.html
+      source_id: 미적28
+      db_key: 미적 28
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-27T23:28:41'
+      code: E0023
+      sub: 1
+      raw: c1의 카피입니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: c1의 설정을 복사하지 마라. 점 P의 위치, 각의 크기, 또는 곡선 위 점 Q의 개수 변화 조건 중 최소 두 가지를 c1과 다르게 새로 설계하라.
+    - file: 미적28-r1-c3v2_gpt_20260526_134314.html
+      source_id: 미적28
+      db_key: 미적 28
+      variant_tag: r1-c3v2
+      track: variant
+      round: 1
+      candidate: 3
+      version: 2
+      timestamp: '2026-05-26T13:43:14'
+      code: E0024
+      sub: 1
+      raw: 후반부 음함수 미분법을 보존한 듯한데, 이 문제의 아이덴티티라고 보기는 어렵습니다.
+      verdict_source: review
+      category: 과변형
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 후반부 음함수 미분만 남기지 말고, 지수곡선 위 점 Q가 각 조건을 만족하는 개수 변화 구조를 복원하라. 임계값 a와 두 x좌표의 차 g(t)를 중심으로
+        문제가 전개되게 다시 만들어라.
+    - file: 미적28-r1-c4_gpt_20260526_135153.html
+      source_id: 미적28
+      db_key: 미적 28
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:51:53'
+      code: E0025
+      sub: 1
+      raw: c1의 카피입니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: c1과 같은 약화형 구성을 반복하지 마라. 각 OQP 조건과 g(t) 정의를 유지하더라도 수치, 점 P의 조건, 최종적으로 묻는 미분값을 c1과 독립적으로
+        재구성하라.
+  미적29:
+    db_key: 미적 29
+    feedback:
+    - file: 미적29-2027R1_gpt_20260520_181248.html
+      source_id: 미적29
+      db_key: 미적 29
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T18:12:48'
+      code: E0026
+      sub: 2
+      raw: c2의 하위호환 느낌입니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: medium
+      verdict: reject
+      directive: c2보다 단순한 하위 버전으로 만들지 마라. c2가 사용한 구조와 겹치지 않도록 수열의 개수, 항 사이의 결합 방식, 수렴 조건 중 하나 이상을 새로 설계하라.
+    - file: 미적29-r1-c1_gpt_20260527_233116.html
+      source_id: 미적29
+      db_key: 미적 29
+      variant_tag: r1-c1
+      track: variant
+      round: 1
+      candidate: 1
+      version: null
+      timestamp: '2026-05-27T23:31:16'
+      code: E0027
+      sub: 1
+      raw: k+1과 k-l로 바꾼 건 좋습니다만, 나머지 형태가 원본 수열의 표현법만 바꾼 건데, 29번이 포장이 수열 형태로 나와야 함을 감안하면 사용하지 못합니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: k+1, k-l처럼 기호만 바꾸는 변형으로 끝내지 마라. 29번 수열 문항답게 등비수열의 항 조건과 무한급수 조건을 실제 수열 형태로 새로 제시하고, 원본의
+        표현만 치환한 구조는 버려라.
+    - file: 미적29-r1-c2_gpt_20260527_232920.html
+      source_id: 미적29
+      db_key: 미적 29
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-27T23:29:20'
+      code: E0028
+      sub: 1
+      raw: 하나의 수열과 cn+cn+1을 사용한 부분은 좋습니다. 다만 다른 조건들이 원본과 너무 흡사하여 그 부분만 바꾸면 좋을 듯합니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: medium
+      verdict: revise
+      directive: 하나의 수열과 c_n+c_{n+1}을 쓰는 골격은 유지하되, 576의 약수 개수 조건과 급수값이 홀수 자연수라는 조건을 원본과 다르게 바꿔라. 특정 항의
+        곱이 정수를 만드는 개수 조건 대신 인접항의 합이나 비에 대한 정수 조건으로 재설계하라.
+    - file: 미적29-r1-c3_gpt_20260526_134411.html
+      source_id: 미적29
+      db_key: 미적 29
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:44:11'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+  미적30:
+    db_key: 미적 30
+    feedback:
+    - file: 미적30-2027R1_gpt_20260520_210606.html
+      source_id: 미적30
+      db_key: 미적 30
+      variant_tag: 2027R1
+      track: baseline
+      round: 1
+      candidate: null
+      version: null
+      timestamp: '2026-05-20T21:06:06'
+      code: E0030
+      sub: 2
+      raw: 변형이 너무 적게 되었습니다. 실질적으로 방법론이 아예 똑같이 적용됩니다.
+      verdict_source: review
+      category: 변형부족
+      target_condition: null
+      severity: high
+      verdict: reject
+      directive: 원본과 같은 역함수 적분 변환 및 구간별 넓이 계산 방법이 그대로 통하지 않게 하라. f(4f(x))=x+a 형태나 [4,6]의 일차 구간을 그대로 두지
+        말고, 합성식의 계수와 선형 구간을 함께 바꿔라.
+    - file: 미적30-r1-c2_gpt_20260526_123931.html
+      source_id: 미적30
+      db_key: 미적 30
+      variant_tag: r1-c2
+      track: variant
+      round: 1
+      candidate: 2
+      version: null
+      timestamp: '2026-05-26T12:39:31'
+      code: null
+      sub: null
+      raw: null
+      verdict_source: ok
+      category: null
+      target_condition: null
+      severity: null
+      verdict: ok
+      directive: null
+    - file: 미적30-r1-c3_gpt_20260526_134344.html
+      source_id: 미적30
+      db_key: 미적 30
+      variant_tag: r1-c3
+      track: variant
+      round: 1
+      candidate: 3
+      version: null
+      timestamp: '2026-05-26T13:43:44'
+      code: E0032
+      sub: 1
+      raw: (다) 조건만 조금 바뀌면 좋을 듯합니다.
+      verdict_source: review
+      category: 조건미세조정
+      target_condition: (다)
+      severity: low
+      verdict: minor
+      directive: (다)의 적분값 조건만 다른 방식으로 제시하라. 예를 들어 ∫g(x)dx의 구간이나 값을 바꾸거나, 같은 넓이 정보를 f의 적분 조건으로 우회해 제시하라.
+    - file: 미적30-r1-c4_gpt_20260526_135514.html
+      source_id: 미적30
+      db_key: 미적 30
+      variant_tag: r1-c4
+      track: variant
+      round: 1
+      candidate: 4
+      version: null
+      timestamp: '2026-05-26T13:55:14'
+      code: E0033
+      sub: 1
+      raw: c2와 c3가 있는 상황에서 굳이 채택할 이유를 느끼지 못했습니다.
+      verdict_source: review
+      category: 후보중복
+      target_condition: null
+      severity: medium
+      verdict: reject
+      directive: c2, c3와 같은 채택 후보가 이미 있으므로 동일한 역함수·선형구간 구성을 반복하지 마라. 합성 조건의 상수, 선형으로 주어지는 구간, 적분 조건을 모두
+        다르게 잡아 독립 후보로 만들라.
