@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SolutionIdea",
+  "description": "원본문항과 제공된 풀이에서 확인한 핵심 수학 개념과 풀이 메커니즘. 후보 문항이 함께 있을 때만 전이 여부를 판단한다.",
+  "type": "object",
+  "properties": {
+    "concept": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "입력에서 확인되는 핵심 수학 개념 하나. 근거가 부족하면 null."
+    },
+    "mechanism": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "핵심 풀이에서 실제로 수행하는 판단이나 변환을 한 문장으로 기술. 근거가 부족하면 null."
+    },
+    "transferable": {
+      "type": "boolean",
+      "description": "원문항과 후보 문항의 풀이를 모두 확인했을 때만 포함. 후보가 핵심 풀이 메커니즘을 유지하면 true."
+    }
+  },
+  "required": ["concept", "mechanism"],
+  "additionalProperties": false
+}
