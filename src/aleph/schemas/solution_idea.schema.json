@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SolutionIdea",
-  "description": "원본문항과 제공된 풀이에서 확인한 핵심 수학 개념과 풀이 메커니즘. 후보 문항이 함께 있을 때만 전이 여부를 판단한다.",
+  "description": "원본문항과 해설에서 확인한 두 핵심 풀이 요소와 두 요소의 연결 메커니즘. 두 요소를 확인하지 못하면 key_elements와 mechanism을 null로 두고 문항 오류로 처리한다.",
   "type": "object",
   "properties": {
     "concept": {
@@ -9,16 +9,24 @@
       "minLength": 1,
       "description": "입력에서 확인되는 핵심 수학 개념 하나. 근거가 부족하면 null."
     },
+    "key_elements": {
+      "type": ["array", "null"],
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "description": "원문 해설에서 근거를 확인할 수 있는 서로 다른 핵심 풀이 요소 두 가지. 두 가지를 확인하지 못하면 null."
+    },
     "mechanism": {
       "type": ["string", "null"],
       "minLength": 1,
-      "description": "핵심 풀이에서 실제로 수행하는 판단이나 변환을 한 문장으로 기술. 근거가 부족하면 null."
+      "description": "두 핵심 풀이 요소가 어떻게 연결되어 결론에 이르는지 한 문장으로 기술. 두 요소나 연결 근거가 부족하면 null."
     },
     "transferable": {
       "type": "boolean",
-      "description": "원문항과 후보 문항의 풀이를 모두 확인했을 때만 포함. 후보가 핵심 풀이 메커니즘을 유지하면 true."
+      "description": "원문과 후보의 풀이를 모두 확인했을 때만 포함. 후보가 두 요소의 연결 메커니즘을 의미 있게 응용하면 true."
     }
   },
-  "required": ["concept", "mechanism"],
+  "required": ["concept", "key_elements", "mechanism"],
   "additionalProperties": false
 }

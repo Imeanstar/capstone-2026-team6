@@ -1,36 +1,32 @@
-# AGENTS.md — Aleph 작업 규칙 초안
+# AGENTS.md — Aleph 작업 규칙
 
-> 강의 4 검토용 초안. 제품의 **무엇을 만들지**는 [SPEC.md](docs/SPEC.md), 도메인 구조는 [ontology.yaml](docs/ontology.yaml)이 정본이다. 이 문서는 코딩 에이전트가 매 작업에서 읽을 최소 어휘와 규칙만 둔다. `SPEC.md`의 AC는 팀 확정 전 제안이다.
+> 제품의 **무엇을 만들지**는 [SPEC.md](docs/SPEC.md), 도메인 구조는 [ontology.yaml](docs/ontology.yaml)이 정본이다. 이 문서는 코딩 에이전트가 매 작업에서 읽을 최소 어휘와 규칙만 둔다.
 
 ## 1. 제품 맥락
 
-Aleph는 수학 연계문항 제작·검토자가 원문의 핵심 풀이 의도를 유지하는 후보 문항을 만들고, 조건·수학적 성립·교육과정 문제를 확인하도록 돕는 제품이다. 현재 사용자 근거는 [인터뷰 기록](docs/research/interviews.md)에 있다. 문항 생성 알고리즘과 최종 자동 검증 범위는 아직 정해지지 않았다.
+Aleph는 업로드한 수학 원문항과 해설에서 핵심 풀이 요소 두 가지의 연결 메커니즘을 찾아, 이를 응용한 후보 문항을 만들고 검토하도록 돕는 제품이다. 이미지와 수식·텍스트 입력을 함께 받을 수 있다. 사용자 근거는 [인터뷰 기록](docs/research/interviews.md)에 있다.
 
 ## 2. 도메인 용어집
 
 전체 설명·근거·관계는 `docs/ontology.yaml`을 읽는다. 여기에는 작업 중 이름이 흔들리면 안 되는 대표어와 필드만 둔다.
 
-| 대표어 | 최소 어휘 |
-|---|---|
-| `QuestionDeveloper` | `role` = 수학 문항 제작자 / 학원 수학 강사 |
-| `GenerationRequest` | `intended_use` = 문항 사용 목적 |
-| `Question` | `question_role` = `SOURCE` / `CANDIDATE`; `topic`, `solution` |
-| `Condition` | `content`, `role`, `boundary_rule`, `applicability_rule`, `curriculum_aligned` |
-| `SolutionIdea` | `concept`, `mechanism`, `transferable` — 개념과 풀이 행동은 구분한다. `transferable`은 원문과 후보의 풀이를 비교할 때만 판단한다. |
-| `DifficultyProfile` | `target_level`은 목표 난도; `student_verified`는 실제 학생 풀이로 검증했는지의 표시다. |
-| `ReviewResult` | `validity_issue`, `curriculum_issue`, `verdict` = `USE` / `REVISE` / `HOLD`, `reason`, `reviewer_type` = `SELF` / `PEER` / `AI` |
+- QuestionDeveloper: `role`(수학 문항 제작자/학원 수학 강사)
+- GenerationRequest: `intended_use`(문항 사용 목적), `curriculum_scope`(허용할 수업·교육과정 범위)
+- Question: `question_role`(`SOURCE`/`CANDIDATE`), `statement`, `topic`, `solution`
+- Condition: `content`, `role`, `boundary_rule`, `applicability_rule`, `curriculum_aligned`
+- SolutionIdea: `concept`, `key_elements`(핵심 풀이 요소 목록, 2개), `mechanism`(두 요소의 연결), `transferable`(원문·후보 풀이를 비교할 때만 판단)
+- DifficultyProfile: `target_level`(목표 난도), `student_verified`(실제 학생 풀이로 검증했는지)
+- ReviewResult: `validity_issue`, `curriculum_issue`, `verdict`(`USE`/`REVISE`/`HOLD`), `reason`, `reviewer_type`(`SELF`/`PEER`/`AI` — 검토 주체의 종류이며 1·2차 검수 단계와 별개)
 
-`Question`의 문항 본문과 안정적인 식별자 필드명은 아직 온톨로지에 없다. 코드를 작성하면서 새 대표어를 임의로 정본화하지 말고, 필요한 경우 온톨로지·스펙 변경을 함께 제안한다.
+## 3. 절대 규칙
 
-## 3. 절대 규칙 후보
+아래 규칙은 `docs/SPEC.md`의 AC와 대응한다.
 
-팀이 `docs/SPEC.md`의 AC를 확정하면 아래 대응을 함께 확정한다.
-
-1. 근거 없는 풀이 단계나 수학적 사실을 채워 넣지 않는다. 정보가 부족하면 `SolutionIdea.mechanism`을 `null`로 두고 필요한 입력을 요청한다. (↔ AC1, AC2)
-2. 제시한 후보에는 원본문항과의 연결, 양쪽의 `SolutionIdea.mechanism`, 보존 여부의 검토 근거를 드러낸다. (↔ AC3)
+1. 원문 해설에서 서로 다른 핵심 풀이 요소 두 개와 연결 메커니즘을 확인하지 못하면 문항 오류로 처리하고 후보를 만들지 않는다. 읽을 수 없는 이미지나 충돌하는 입력의 수식을 추측하지 않는다. (↔ AC1, AC2, AC8)
+2. 제시한 후보에는 원본문항과의 연결, 두 요소의 메커니즘을 어떻게 응용했는지의 검토 근거를 드러낸다. (↔ AC3)
 3. 알려진 수학적 결함이나 교육과정 이탈이 있는 후보를 `USE`로 표시하지 않는다. 검증하지 않은 후보를 검증 완료로 표현하지 않는다. (↔ AC4, AC5)
 4. 실제 학생 풀이 자료 없이 정답률을 실측값으로 쓰거나 `DifficultyProfile.student_verified=true`로 표시하지 않는다. (↔ AC6)
-5. 후보와 풀이를 내놓을 때 검토 결과의 이유를 함께 제공한다. (↔ AC7)
+5. 후보와 풀이를 내놓을 때 검토 이유를 함께 제공하고, AI의 잠정 판정을 사람의 최종 승인으로 표시하지 않는다. (↔ AC7)
 
 ## 4. 위임 작업의 금지 사항
 
@@ -56,6 +52,5 @@ Aleph는 수학 연계문항 제작·검토자가 원문의 핵심 풀이 의도
 - `docs/research/interviews.md` — 사용자 진술과 로그 번호.
 - `docs/ontology.yaml` — 도메인 대표어와 근거.
 - `docs/PROBLEM.md` — 왜 만드는가; `docs/SPEC.md` — 무엇을 만들고 어떻게 판정하는가.
-- `src/aleph/schemas/solution_idea.schema.json` — 현재 구조화 출력 계약; `src/aleph/prompts/parse_query.md` — 해당 런타임 프롬프트 초안.
-- `docs/ARCHITECTURE.md` — 강의 6에서 구성요소·도구·데이터 흐름을 확정할 문서.
-- 현재 저장소에는 실행 애플리케이션과 공식 테스트 명령이 정해지지 않았다. 구현하면서 검증 가능한 명령을 이 절에 추가한다.
+- `src/aleph/schemas/solution_idea.schema.json` — 구조화 출력 계약; `src/aleph/prompts/parse_query.md` — 런타임 프롬프트.
+- `docs/ARCHITECTURE.md` — 구성요소·도구·데이터 흐름.

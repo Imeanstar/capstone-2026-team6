@@ -92,7 +92,7 @@
 - **반복된 명사 → 클래스·속성 후보**: 수학 문항 제작자·학원 수학 강사 → `QuestionDeveloper`, 제작 목표 → `GenerationRequest`, 원문항·연계 후보 → `Question`, 조건·경계값 → `Condition`, 핵심 풀이 → `SolutionIdea`, 난도 → `DifficultyProfile`, 검토·판정 → `ReviewResult`
 - **반복된 동사 → 대표 관계 후보**: 원문을 사용하다 → `uses_source`, 핵심 풀이를 유지하다 → `preserves`, 문항을 만들다 → `produces`, 조건을 포함하다 → `contains`, 검토 결과를 받다 → `receives`
 - **동의어 통합**: 원문항 = 기출 = 원본 → `Question(SOURCE)`; 변형문항 = 연계문항 = 후보 → `Question(CANDIDATE)`; 핵심 풀이 = 풀이 발상 → `SolutionIdea`
-- **범위 밖**: 결제·판매·정산, PDF·이미지 수식 복원, 공간도형 자동 작도, 학생 데이터 없는 정답률 확정
+- **범위 밖**: 결제·판매·정산, PDF 수식 복원, 공간도형 자동 작도, 학생 데이터 없는 정답률 확정
 
 클래스·속성·관계와 각각의 `evidence:`를 적은 미니 온톨로지 YAML은 [ontology.yaml](../ontology.yaml)에 있다.
 
@@ -118,7 +118,7 @@ Question(CANDIDATE) --(receives)--> ReviewResult
 - [x] 인터뷰 로그가 충분하고(10건 이상) 인용이 실제로 들은 말인가
 - [x] 질문이 과거 행동을 묻는가 (미래, 가정, 유도 질문이 섞이지 않았는가)
 - [x] 로그마다 태그가 붙어 있고, 페인마다 범주와 로그 번호가 있는가
-- [ ] 워크플로 관찰 기록이 1건 이상이고 "본 것"과 "스펙 후보"가 열로 분리되어 있는가
+- [x] 워크플로 관찰 기록이 1건 이상이고 "본 것"과 "스펙 후보"가 열로 분리되어 있는가
 - [x] 핵심 Job Story의 상황, 동기, 기대 결과가 각각 로그 번호로 연결되고, Pull이 가설로 표시되어 있는가
 - [x] 온톨로지 어휘만으로 Job Story를 다시 쓸 수 있는가
 - [ ] 클래스는 전부 로그에서 반복된 명사인가
