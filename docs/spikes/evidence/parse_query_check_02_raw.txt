@@ -1,0 +1,1 @@
+{"concept":"미분","key_elements":null,"mechanism":null}
