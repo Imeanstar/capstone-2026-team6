@@ -20,9 +20,9 @@
 
 | 이름 | 학번 | 역할 | GitHub |
 | :--- | :--- | :--- | :--- |
-| 윤결 (팀장) | 202126823 | 미정 | [@Sora3780](https://github.com/Sora3780) |
-| 김민성 | 202122632 | 미정 | [@Imeanstar](https://github.com/Imeanstar) |
-| 이주현 | 202126924 | 미정 | [@juhyun302](https://github.com/juhyun302) |
+| 윤결 (팀장) | 202126823 | 프로젝트 리드 | [@Sora3780](https://github.com/Sora3780) |
+| 김민성 | 202122632 | 문서작업  | [@Imeanstar](https://github.com/Imeanstar) |
+| 이주현 | 202126924 | git admin | [@juhyun302](https://github.com/juhyun302) |
 
 ## 프로젝트 개요
 
