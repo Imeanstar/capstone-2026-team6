@@ -1,8 +1,8 @@
 # 강의 5 — 출력 검증기 위임·검증 기록
 
-**검토 상태: 2026-10-28 사용자 최종 승인 완료. 커밋·병합·push 전.**
-승인 범위는 현재 강의 5 문서·골든 케이스·테스트·구현과 추가 판정 규칙이다. 자동 로드·등록 스킬 호출·원격 CI의 미확인 상태는 유지한다.
-기준 커밋: `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce`. 검사 대상은 이 커밋에 추가한 로컬 작업 파일이다.
+**검토 상태: 2026-10-28 사용자 최종 승인 완료. `feature/my-work` push 및 원격 CI 통과. main 병합 전.**
+승인 범위는 현재 강의 5 문서·골든 케이스·테스트·구현과 추가 판정 규칙이다. 지침 자동 로드·등록 스킬 호출은 미확인으로 유지한다.
+기준 커밋: `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce`. 승인된 구현 커밋은 `aa0677c32a2224a04e8655d80f0e492b3e8751bc`이며, 원격 실행 근거는 E·F절에 기록했다.
 
 ## A. 위임 대상 선정 (사람이 쓴다)
 
@@ -91,6 +91,7 @@ src/aleph/validation.py의 validate_solution_idea를 구현해줘.
 | 2 — 하니스 보완 후, 17:27 | **33/33 통과** | 실패 원인은 테스트 하니스의 검사 누락이었다. 구현 기능의 골든 실패나 환경 오류는 없었다. | 테스트 코드: C절의 검사와 보조 검사 6개를 추가했다. 프롬프트·골든·구현은 변경하지 않았다. 결함 주입 4종을 재실행하고 정상 구현을 복원했다. |
 | 3 — 별도 세션의 최초 검사 | **골든 33/33 통과, 전체 검사 실패** | 실행자가 `PYTEST_ADDOPTS`에 지정한 임시 경로의 역슬래시가 해석 중 제거됐다. `tmp_path`를 쓰는 보조 검사 12개에서 setup 오류가 발생했다. | 실행 환경: 임시 경로를 환경변수 대신 독립된 `--basetemp` 인자로 전달하도록 보정했다. 저장소 파일은 수정하지 않았다. |
 | 4 — 별도 세션의 경로 보정 후 | **33/33 통과** | 추가 오류 없음. 전체 54개가 1.00초에 통과했다. | 코드·테스트·기대값 수정 없음. 전체 pytest만 1회 추가 실행했다. 등록 스킬 호출이 아닌 수동 절차 실행으로 기록했다. |
+| 5 — 승인 후 GitHub Actions | **33/33 통과** | Ubuntu 24.04·Python 3.12.15에서 전체 54개가 0.54초에 통과했다. Ruff와 54개 수집도 통과했다. | 코드·테스트·기대값 수정 없음. 승인된 결과물을 `feature/my-work`에 push하고 원격 실행 결과를 확인했다. |
 
 - 수용 판단(무엇을 확인하고 병합했나): **2026-10-28 사용자가 현재 강의 5 문서·골든 케이스·테스트·구현과 추가 판정 규칙을 명시적으로 승인했다. 병합은 아직 하지 않았다.** 골든 33개, 보조 21개, Ruff 통과, 필수 조건의 오류 반환 분기, 결함 검출, 원복과 기준 파일 보존을 검토 근거로 삼았다. 승인 범위는 이번 출력 검증기이며, 제품 전체 AC 완료나 원격 CI 통과를 뜻하지 않는다. 이번 승인은 현재 결과물의 최종 승인으로 기록하며 과거의 중간 검토 승인으로 소급하지 않는다.
 - 실행한 커밋과 명령, 로그 위치: 기준 커밋 `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce` 위의 **미커밋 로컬 파일**을 검사했다. 실행한 명령은 아래와 같다. 원본 로그는 저장소 루트 기준 `../lecture05-minimal-verification/`(1회차)와 `../lecture05-ready-verification/`(2회차)의 `run.json`, `collect.txt`, `golden.txt`, `all_tests.txt`, `lint.txt`다. 결함 주입 로그와 파일 해시는 2회차 폴더의 `mutation_*.txt`, `mutation_summary.json`에 있다. 이 폴더들은 저장소 밖의 로컬 작업 자료다.
@@ -104,6 +105,8 @@ python -m ruff check .
 
   3·4회차 원본은 저장소 밖 `C:/Users/user/Documents/Codex/2026-10-28/5-c-users-user-documents-codex/outputs/lecture05-session-check.txt`다. 대상 저장소의 `.venv/Scripts/python.exe`를 사용했다. 3회차는 `-m pytest -q -rs`와 환경변수의 임시 경로를 사용했고, 4회차는 `-m pytest -q -rs --basetemp 'C:\Users\user\Documents\Codex\2026-10-28\5-c-users-user-documents-codex\work\aleph-pytest-515e6fab905e49ae9df1b8b535464f31'`로 실행했다. 최초 실행 종료 코드는 1, 보정 실행은 0이었다.
 
+  5회차는 구현 커밋 `aa0677c32a2224a04e8655d80f0e492b3e8751bc`에서 실행했다. [GitHub Actions 실행 및 로그](https://github.com/Imeanstar/capstone-2026-team6/actions/runs/40671393760)에서 `python -m ruff check .`, `python -m pytest tests/test_validation_golden.py --collect-only -q`, `python -m pytest -q -rs`의 성공을 확인했다. 테스트 수집은 골든 33개와 보조 21개이며, 전체 결과는 **54 passed, failed·skipped·xfailed·errors 0건**이다. 실행 결과는 `.github/workflows/tests.yml`의 검사 범위에 한정한다.
+
 - 각 회차의 skipped / xfailed와 보조 검사 결과: **1회차** 골든 passed 33, failed 0, skipped 0, xfailed 0 / 보조 15/15 통과 / 전체 48 passed. **2회차** 골든 passed 33, failed 0, skipped 0, xfailed 0 / 보조 21/21 통과 / 전체 54 passed. 두 회차 모두 보조 검사의 failed·skipped·xfailed는 0건이고 Ruff도 통과했다. 골든은 33개를 유지했고, 하니스 허점을 검사하기 위해 보조 검사만 6개 추가했다.
   **3회차** 골든 33 passed / 보조 9 passed, 12 errors / 전체 42 passed, 12 errors. **4회차** 골든 33 passed / 보조 21 passed / 전체 54 passed, errors 0. 두 실행 모두 failed·skipped·xfailed는 0건이다. 3회차는 errors 12건으로 실패이며 최종 통과와 구분한다. 별도 세션에서 Ruff도 통과했고 54개 수집을 확인했다.
 - 한 회차에 끝났다면 제공한 컨텍스트와 추가로 확인한 근거: 구현의 첫 실행에서 골든 33개가 통과했다. SPEC AC1·AC2, AGENTS 절대 규칙, 기존 스키마, 파싱 프롬프트의 null·생략 정책, 오류 계약, 골든 33개를 제공했다. 추가로 임시 구현의 전수 통과, 4종 결함 검출, 코드와 기준 파일의 차이, 케이스별 통과 이유를 확인했다. 독립 검토 후 하니스를 보완했으므로 작업 전체는 한 회차에 끝나지 않았다. 첫 통과만으로 모든 오류가 없다고 판단하지 않았다.
@@ -112,7 +115,7 @@ python -m ruff check .
 ## F. 구현 코드 (에이전트가 쓰고 사람이 검증한다)
 
 구현 파일: [`src/aleph/validation.py`](../../src/aleph/validation.py)의 `validate_solution_idea`.
-체크 표시는 실행 기록·코드 대조와 2026-10-28 사용자 승인에 따른 상태다. 원격 CI는 미확인으로 남긴다.
+체크 표시는 실행 기록·코드 대조, 2026-10-28 사용자 승인과 E절 5회차의 원격 CI 결과에 따른 상태다.
 
 ### 사람이 검증할 것
 
@@ -122,12 +125,12 @@ python -m ruff check .
 - [x] 승인된 기준 커밋과 비교해 **테스트, 케이스 및 fixture에 승인 없는 변경이 없는가**(커밋된 변경과 새 파일 포함)
 - [x] 스펙의 필수 조건이 점수나 가중치가 아니라 **판정 조건**으로 구현되었는가(단골: 식이제약의 하드 필터)
 - [x] 스펙에 없는 동작을 사람이 검토하고 필요한 규칙과 테스트를 보완했는가
-- [ ] 합의한 린트와 CI 검사도 통과했는가
+- [x] 합의한 린트와 CI 검사도 통과했는가
 - [x] 팀원 누구나 통과 근거를 설명할 수 있는가
 
 ### 우리 팀
 
-- 수용한 커밋 / 비교한 기준 커밋: **커밋 생성 전의 현재 작업본을 2026-10-28 사용자 승인** / `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce`. 기준 커밋 대비 신규 테스트·골든 케이스와 보완 이력을 포함해 승인했다. 기존 fixture의 내용은 기준 커밋과 같다. 검증 당시 승인 상태 갱신 전의 파일 해시는 로컬 `../lecture05-ready-verification/mutation_summary.json`에 있다. 이번 갱신은 문서의 승인 기록과 YAML의 주석·`review_status`만 변경하며 케이스 입력·기대값은 유지한다.
+- 수용한 커밋 / 비교한 기준 커밋: **2026-10-28 승인한 작업본을 커밋한 `aa0677c32a2224a04e8655d80f0e492b3e8751bc`** / `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce`. 기준 커밋 대비 신규 테스트·골든 케이스와 보완 이력을 포함해 승인했다. 기존 fixture의 내용은 기준 커밋과 같다. 검증 당시 승인 상태 갱신 전의 파일 해시는 로컬 `../lecture05-ready-verification/mutation_summary.json`에 있다. 승인 시 문서의 승인 기록과 YAML의 주석·`review_status`를 갱신했고 케이스 입력·기대값은 유지했다. CI 확인 후에는 이 문서에 실행 근거만 추가했다.
 - 수용 전에 되돌려 보낸 것이 있었다면 그 이유: C절의 독립 검토에서 테스트 하니스의 허점 3개를 발견해 보완했다. boolean과 숫자의 혼동, YAML 케이스 덮어쓰기, 잘못된 기대 판정이 통과할 수 있었기 때문이다. 보조 검사 6개와 검증 로직을 추가한 뒤 재검토했다. 사람의 반려나 승인 이력으로 기록한 것은 아니다.
 
 ## G. 에이전트 하니스 구성 (사람이 쓴다)
