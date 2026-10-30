@@ -81,36 +81,28 @@ src/aleph/validation.py의 validate_solution_idea를 구현해줘.
 
 ## E. 검증 루프 기록 (사람이 쓴다)
 
-### 우리 팀
-
-회차의 통과 분모는 골든 케이스 수다. 보조 검사는 아래에 따로 기록한다. 실행일은 2026-10-28이다.
+통과 수는 골든 케이스와 보조 검사를 구분했다.
 
 | 회차 | 결과 | 무엇이 문제였나 | 무엇을 고쳤나 |
 |---|---|---|---|
-| 1 — 구현·최소 구성 정리 후, 16:59 | **33/33 통과** | 골든 실패는 없었다. 이후 독립 검토에서 반환 타입 비교, YAML 중복 키, 기대 판정의 일관성 검사에 허점 3개를 확인했다. | 구현: 출력 검증 함수를 작성했다. 문서·테스트를 통합했다. 골든 입력·기대값은 유지했다. |
-| 2 — 하니스 보완 후, 17:27 | **33/33 통과** | 실패 원인은 테스트 하니스의 검사 누락이었다. 구현 기능의 골든 실패나 환경 오류는 없었다. | 테스트 코드: C절의 검사와 보조 검사 6개를 추가했다. 프롬프트·골든·구현은 변경하지 않았다. 결함 주입 4종을 재실행하고 정상 구현을 복원했다. |
-| 3 — 별도 세션의 최초 검사 | **골든 33/33 통과, 전체 검사 실패** | 실행자가 `PYTEST_ADDOPTS`에 지정한 임시 경로의 역슬래시가 해석 중 제거됐다. `tmp_path`를 쓰는 보조 검사 12개에서 setup 오류가 발생했다. | 실행 환경: 임시 경로를 환경변수 대신 독립된 `--basetemp` 인자로 전달하도록 보정했다. 저장소 파일은 수정하지 않았다. |
-| 4 — 별도 세션의 경로 보정 후 | **33/33 통과** | 추가 오류 없음. 전체 54개가 1.00초에 통과했다. | 코드·테스트·기대값 수정 없음. 전체 pytest만 1회 추가 실행했다. 등록 스킬 호출이 아닌 수동 절차 실행으로 기록했다. |
-| 5 — 승인 후 GitHub Actions | **33/33 통과** | Ubuntu 24.04·Python 3.12.15에서 전체 54개가 0.54초에 통과했다. Ruff와 54개 수집도 통과했다. | 코드·테스트·기대값 수정 없음. 승인된 결과물을 `feature/my-work`에 push하고 원격 실행 결과를 확인했다. |
+| 1 — 첫 구현 | **골든 33/33, 보조 15/15 통과** | 실행은 통과했으나 독립 검토에서 하니스의 검사 누락 3건을 발견했다. | 출력 검증기를 구현하고 하니스 보완 항목을 정리했다. |
+| 2 — 하니스 보완 | **골든 33/33, 보조 21/21 통과** | 반환 타입, YAML 중복 키, 기대 판정의 일관성 검사가 부족했다. | C절의 검사와 보조 6개를 추가했다. 결함 4종의 검출과 구현 원복을 확인했다. |
+| 3 — 별도 세션 최초 검사 | **골든 33/33, 보조 9개 통과·12개 오류** | 임시 경로 설정 때문에 보조 검사 12개에서 setup 오류가 발생했다. | 경로를 `--basetemp` 인자로 전달하도록 보정했다. |
+| 4 — 경로 보정 후 재검사 | **골든 33/33, 보조 21/21 통과** | 추가 오류 없음. | 파일 수정 없이 수동 검사를 다시 실행했다. |
+| 5 — 승인 후 CI | **골든 33/33, 보조 21/21 통과** | 추가 오류 없음. | `feature/my-work`에 push하고 자동 CI 통과를 확인했다. |
 
-- 수용 판단(무엇을 확인하고 병합했나): **2026-10-28 사용자가 현재 강의 5 문서·골든 케이스·테스트·구현과 추가 판정 규칙을 명시적으로 승인했다. 병합은 아직 하지 않았다.** 골든 33개, 보조 21개, Ruff 통과, 필수 조건의 오류 반환 분기, 결함 검출, 원복과 기준 파일 보존을 검토 근거로 삼았다. 승인 범위는 이번 출력 검증기이며, 제품 전체 AC 완료나 원격 CI 통과를 뜻하지 않는다. 이번 승인은 현재 결과물의 최종 승인으로 기록하며 과거의 중간 검토 승인으로 소급하지 않는다.
-- 실행한 커밋과 명령, 로그 위치: 기준 커밋 `efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce` 위의 **미커밋 로컬 파일**을 검사했다. 실행한 명령은 아래와 같다. 원본 로그는 저장소 루트 기준 `../lecture05-minimal-verification/`(1회차)와 `../lecture05-ready-verification/`(2회차)의 `run.json`, `collect.txt`, `golden.txt`, `all_tests.txt`, `lint.txt`다. 결함 주입 로그와 파일 해시는 2회차 폴더의 `mutation_*.txt`, `mutation_summary.json`에 있다. 이 폴더들은 저장소 밖의 로컬 작업 자료다.
+- 수용 판단(무엇을 확인하고 병합했나): 2026-10-28 골든 33개·보조 21개와 Ruff 통과, 결함 검출·원복, 기준 파일 보존을 확인해 출력 검증기를 최종 수용했다. 이후 원격 CI도 통과했다. 수용은 구현·검증 후에 진행했으며 main에는 아직 병합하지 않았다.
+- 실행한 커밋과 명령, 로그 위치: 1~4회차는 기준 커밋 `efbfff2`에 추가한 미커밋 작업본, 5회차는 구현 커밋 `aa0677c`에서 검사했다. 실행 결과는 위 표, 결함별 실패 단언문과 원복 근거는 C절에 기록했다. 원격 로그는 [구현 커밋 CI](https://github.com/Imeanstar/capstone-2026-team6/actions/runs/40671393760)와 [기록 갱신 커밋 `562318f`의 CI](https://github.com/Imeanstar/capstone-2026-team6/actions/runs/40671835797)에서 확인할 수 있다. CI 검사 명령은 다음과 같다.
 
 ```sh
 python -m pytest tests/test_validation_golden.py --collect-only -q
-python -m pytest tests/test_validation_golden.py::test_validation_golden -v -rs --junitxml=.tmp/ready-golden.xml
-python -m pytest -q -rs --basetemp=.tmp/ready-pytest --junitxml=.tmp/ready-all.xml
+python -m pytest -q -rs
 python -m ruff check .
 ```
 
-  3·4회차 원본은 저장소 밖 `C:/Users/user/Documents/Codex/2026-10-28/5-c-users-user-documents-codex/outputs/lecture05-session-check.txt`다. 대상 저장소의 `.venv/Scripts/python.exe`를 사용했다. 3회차는 `-m pytest -q -rs`와 환경변수의 임시 경로를 사용했고, 4회차는 `-m pytest -q -rs --basetemp 'C:\Users\user\Documents\Codex\2026-10-28\5-c-users-user-documents-codex\work\aleph-pytest-515e6fab905e49ae9df1b8b535464f31'`로 실행했다. 최초 실행 종료 코드는 1, 보정 실행은 0이었다.
-
-  5회차는 구현 커밋 `aa0677c32a2224a04e8655d80f0e492b3e8751bc`에서 실행했다. [GitHub Actions 실행 및 로그](https://github.com/Imeanstar/capstone-2026-team6/actions/runs/40671393760)에서 `python -m ruff check .`, `python -m pytest tests/test_validation_golden.py --collect-only -q`, `python -m pytest -q -rs`의 성공을 확인했다. 테스트 수집은 골든 33개와 보조 21개이며, 전체 결과는 **54 passed, failed·skipped·xfailed·errors 0건**이다. 실행 결과는 `.github/workflows/tests.yml`의 검사 범위에 한정한다.
-
-- 각 회차의 skipped / xfailed와 보조 검사 결과: **1회차** 골든 passed 33, failed 0, skipped 0, xfailed 0 / 보조 15/15 통과 / 전체 48 passed. **2회차** 골든 passed 33, failed 0, skipped 0, xfailed 0 / 보조 21/21 통과 / 전체 54 passed. 두 회차 모두 보조 검사의 failed·skipped·xfailed는 0건이고 Ruff도 통과했다. 골든은 33개를 유지했고, 하니스 허점을 검사하기 위해 보조 검사만 6개 추가했다.
-  **3회차** 골든 33 passed / 보조 9 passed, 12 errors / 전체 42 passed, 12 errors. **4회차** 골든 33 passed / 보조 21 passed / 전체 54 passed, errors 0. 두 실행 모두 failed·skipped·xfailed는 0건이다. 3회차는 errors 12건으로 실패이며 최종 통과와 구분한다. 별도 세션에서 Ruff도 통과했고 54개 수집을 확인했다.
-- 한 회차에 끝났다면 제공한 컨텍스트와 추가로 확인한 근거: 구현의 첫 실행에서 골든 33개가 통과했다. SPEC AC1·AC2, AGENTS 절대 규칙, 기존 스키마, 파싱 프롬프트의 null·생략 정책, 오류 계약, 골든 33개를 제공했다. 추가로 임시 구현의 전수 통과, 4종 결함 검출, 코드와 기준 파일의 차이, 케이스별 통과 이유를 확인했다. 독립 검토 후 하니스를 보완했으므로 작업 전체는 한 회차에 끝나지 않았다. 첫 통과만으로 모든 오류가 없다고 판단하지 않았다.
-- 새로 발견한 미명세 항목과 반영 위치: **2026-10-28 승인된 추가 판정 규칙:** JSON 해석 → 기존 스키마 → 공백 문자열 → 비교 근거 → 필수 null 순으로 검사한다. 중복 JSON 키·NaN/Infinity는 `JSON_INVALID`, 스키마 위반은 `SCHEMA_INVALID`, 공백은 `EMPTY_TEXT`, 비교 근거 없는 전이 판단은 `COMPARISON_REQUIRED`, 필수 null은 `MISSING_ELEMENTS` 또는 `MISSING_MECHANISM`으로 구분한다. 실제 분기는 `src/aleph/validation.py`, 기대값은 골든 YAML에 있다. 보완 케이스는 `duplicate_json_key`, `nonstandard_nan`, `blank_mechanism`, `blank_element`다. 하니스의 타입·중복 키·기대 판정 검사는 `tests/test_validation_golden.py`에 반영했다. 기준 보호는 `AGENTS.md` 4절, 실행·skip·xfail 기준은 6절에 있다. **SPEC은 원본을 유지했다.** 사용자는 이 추가 판정 규칙을 현재 구현의 기준으로 승인했다.
+- 각 회차의 skipped / xfailed와 보조 검사 결과: 보조 검사 결과는 표에 구분했다. 모든 회차의 failed·skipped·xfailed는 0건이다. 단, 3회차는 setup 오류 12건으로 전체 검사가 실패했고 4회차에 해소했다. 최종 결과는 **54 passed, errors·skipped·xfailed 0건**이다.
+- 한 회차에 끝났다면 제공한 컨텍스트와 추가로 확인한 근거: SPEC AC1·AC2, AGENTS, 기존 스키마·파싱 프롬프트와 골든 케이스를 제공해 첫 구현에서 33개가 통과했다. 이후 하니스 보완과 결함 주입 검사를 수행했으므로 전체 작업이 한 회차에 끝난 것은 아니다.
+- 새로 발견한 미명세 항목과 반영 위치: 형식 오류와 필수 null의 구분, 공백·중복 키 거부, 비교 근거 없는 전이 판단 금지와 오류 검사 순서를 확정했다. 세부 규칙은 [SPEC 5.1절](../SPEC.md#51-풀이-아이디어-출력-검증--ac1ac2의-세부-규칙), 기대값은 골든 YAML, 기준 보호는 AGENTS 4·6절에 반영했다.
 
 ## F. 구현 코드 (에이전트가 쓰고 사람이 검증한다)
 
@@ -137,7 +129,7 @@ python -m ruff check .
 
 ### 우리 팀
 
-- 도구와 버전, 진입점 파일 및 로드 확인 결과: 2026-10-28 별도 세션에서 **codex-cli 0.157.1**, Python 3.12.14, Ruff 0.11.13, pytest 8.3.5를 확인했다. 앱 도구가 보고한 설치 버전은 26.1021.31345, 빌드는 21828이며 실행 중인 빌드와의 일치는 미확인이다. 진입점은 저장소 루트의 `AGENTS.md`다. 별도 세션은 대상 저장소가 아닌 `C:/Users/user/Documents/Codex/2026-10-28/5-c-users-user-documents-codex`에서 시작했다. 저장소 지침은 작업 중 직접 읽었다. **지침 자동 로드, 프로젝트 신뢰 상태, 저장소 설정 로드는 미확인**이다. 대상 저장소에서 시작한 세션의 자동 인식을 검증한 결과로 보지 않는다. 보고서 위치와 실행 결과는 E절에 기록했다.
+- 도구와 버전, 진입점 파일 및 로드 확인 결과: 2026-10-28 별도 세션에서 **codex-cli 0.157.1**, Python 3.12.14, Ruff 0.11.13, pytest 8.3.5를 확인했다. 앱 도구가 보고한 설치 버전은 26.1021.31345, 빌드는 21828이며 실행 중인 빌드와의 일치는 미확인이다. 진입점은 저장소 루트의 `AGENTS.md`다. 별도 세션은 대상 저장소가 아닌 `C:/Users/user/Documents/Codex/2026-10-28/5-c-users-user-documents-codex`에서 시작했다. 저장소 지침은 작업 중 직접 읽었다. **지침 자동 로드, 프로젝트 신뢰 상태, 저장소 설정 로드는 미확인**이다. 대상 저장소에서 시작한 세션의 자동 인식을 검증한 결과로 보지 않는다. 별도 세션의 실행 결과는 E절에 기록했다.
 - 허용(allow)한 명령 / 확인(ask) 대상 명령: **작업상 허용**은 저장소 읽기, `git status`, `git diff`, `git ls-files`, 프로젝트 Python으로 실행하는 Ruff·pytest다. / **사전 확인 대상**은 `git push`, 기준 파일 변경, 새 의존성 설치와 허용 범위 밖 접근이다. 현재 명시된 사용자 조건에 따라 push는 최종 검토 전 실행하지 않는다. 이 구분은 작업 규칙이며, Codex 설정에 명령별 allow/ask 목록을 등록한 것은 아니다. 저장소 설정 파일의 값은 `approval_policy="on-request"`, `sandbox_mode="workspace-write"`, `network_access=false`다. 별도 세션이 제공한 정책은 `sandbox_mode=workspace-write`, `approvals_reviewer=auto_review`, 파일시스템·네트워크 제한이다. 정확한 `approval_policy`와 저장소 설정의 실제 적용 여부는 미확인이다. 설정값만으로 push 확인이나 테스트 파일 쓰기 차단이 강제된다고 주장하지 않는다.
 - 판정 기준 보호: 금지 사항의 위치 **`AGENTS.md` 4절 첫 항목과 skip·xfail 금지 항목** / 수용 전 확인 방법 **기준 커밋과 tracked 변경을 비교하고, untracked 파일을 별도로 열어 확인한다.** `git diff efbfff2f9071f2ac8cce4eb7da0fe514a79ea8ce -- tests src/aleph/schemas docs/spikes/evidence`, `git ls-files --others --exclude-standard`, 로컬 `../lecture05-ready-verification/mutation_summary.json`의 해시를 함께 사용한다. 테스트 파일은 쓰기 가능한 경로에 있으므로 지침만으로 쓰기가 차단되지는 않는다.
 - 사용하는 코딩 에이전트와 각 항목의 파일 위치: **Codex**. 지침 로드는 `AGENTS.md`, 권한 설정은 `.codex/config.toml`, 재사용 명령 본문은 `.agents/skills/aleph-check/SKILL.md`, 자동 호출 정책은 `.agents/skills/aleph-check/agents/openai.yaml`, 작업별 범위·중단 조건·보고는 이 문서 C·D·G절, CI는 `.github/workflows/tests.yml`에 둔다. Codex 대응 경로를 사용하므로 Claude 전용 파일은 만들지 않는다.
