@@ -280,7 +280,6 @@
 .job__error ul { padding-left: 1.2em; color: var(--color-ink-2); }
 .job__error-actions { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
 
-.prov { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--color-muted); }
 .elapsed { display: grid; justify-items: end; gap: var(--space-3xs); margin: 0; }
 .elapsed__v { font-family: var(--font-display); font-weight: 600; font-size: var(--text-2xl); line-height: 1; color: var(--color-ink); letter-spacing: -0.01em; }
 .elapsed__k { font-size: var(--text-sm); color: var(--color-muted); }

@@ -4,8 +4,7 @@
 
 import { sampleResult, SAMPLE_SOURCE } from './fixtures'
 import { CURRICULUM_SCOPE } from './config'
-import type { GenerationRequest, GenerationResult, JobEvent, Provenance, QuestionError, ReviewResult, SolutionIdea, Verdict } from './types'
-import { extractIdea, fileToImage, type ExtractInput } from './client'
+import type { GenerationRequest, GenerationResult, JobEvent, QuestionError, ReviewResult, Verdict } from './types'
 
 const STORE_KEY = 'aleph.mock.v1'
 
@@ -39,9 +38,6 @@ function save(store: Store) {
   }
 }
 
-/** Request payloads kept in memory for the live call; a page refresh loses them and the job falls back to stored responses. */
-const PENDING: Map<string, ExtractInput> = new Map()
-
 function id(prefix: string) {
   return `${prefix}_${Math.random().toString(36).slice(2, 8)}`
 }
@@ -65,13 +61,7 @@ export async function createJob(req: GenerationRequest): Promise<{ jobId: string
   const jobId = id('job')
   store.jobs[jobId] = { request: serialize(req) }
   save(store)
-  const p = req.source_question.problem
-  const e = req.source_question.explanation
-  PENDING.set(jobId, {
-    problem: { text: p.text?.trim() || undefined, image: p.image ? (await fileToImage(p.image)) ?? undefined : undefined },
-    explanation: { text: e.text?.trim() || undefined, image: e.image ? (await fileToImage(e.image)) ?? undefined : undefined },
-  })
-  await delay(120)
+  await delay(240)
   return { jobId }
 }
 
@@ -128,74 +118,33 @@ export async function* jobEvents(jobId: string, signal?: AbortSignal): AsyncGene
     return
   }
 
-  const provenance: Provenance = { read: 'stored', generate: 'stored', review: 'stored' }
-  yield { stage: 'extract', provenance }
+  yield { stage: 'extract', solution_idea: { concept: '도함수 부호 변화와 극값' } }
+  await sleep(700, signal)
 
-  // Live extraction: the versioned parser prompt against Claude, validated by the
-  // port of validate_solution_idea on the Worker. Falls back to the stored
-  // recording only when the API is unreachable, and says so.
-  let idea: SolutionIdea | null = null
-  const pending = PENDING.get(jobId)
-  if (pending) {
-    const out = await extractIdea(pending, signal)
-    if (out.kind === 'ok') {
-      idea = out.idea
-      provenance.extract = 'live'
-      provenance.validate = 'live'
-      provenance.model = out.model
-      yield { stage: 'extract', solution_idea: idea, provenance }
-      await sleep(400, signal)
-    } else if (out.kind === 'question_error') {
-      provenance.extract = 'live'
-      provenance.validate = 'live'
-      provenance.model = out.model
-      const error: QuestionError = { status: 'QUESTION_ERROR', error_code: out.error_code, reason: out.reason }
-      job.error = error
-      save(store)
-      yield { stage: 'error', error, provenance }
-      return
-    } else if (out.kind === 'output_error') {
-      provenance.extract = 'live'
-      provenance.validate = 'live'
-      provenance.model = out.model
-      const error: QuestionError = { status: 'QUESTION_ERROR', error_code: 'UNREADABLE_INPUT', reason: `모델 출력이 두 번 모두 스키마를 위반했습니다(${out.error_code}). ${out.reason}` }
-      job.error = error
-      save(store)
-      yield { stage: 'error', error, provenance }
-      return
-    } else {
-      provenance.note = `추출 API를 쓰지 못해 저장된 응답으로 대체했습니다: ${out.reason}`
+  if (thin) {
+    const error: QuestionError = {
+      status: 'QUESTION_ERROR',
+      error_code: 'MISSING_ELEMENTS',
+      reason: '해설에서 근거 있는 핵심 풀이 요소를 하나만 확인했습니다. 서로 다른 두 요소가 없어 후보를 만들지 않았습니다.',
     }
-  } else {
-    provenance.note = '입력 자료를 다시 보낼 수 없어(새로고침) 저장된 응답으로 대체했습니다.'
+    job.error = error
+    save(store)
+    yield { stage: 'error', error }
+    return
   }
 
-  if (!idea) {
-    provenance.extract = 'stored'
-    provenance.validate = 'stored'
-    if (thin) {
-      const error: QuestionError = {
-        status: 'QUESTION_ERROR',
-        error_code: 'MISSING_ELEMENTS',
-        reason: '해설에서 근거 있는 핵심 풀이 요소를 하나만 확인했습니다. 서로 다른 두 요소가 없어 후보를 만들지 않았습니다.',
-      }
-      job.error = error
-      save(store)
-      yield { stage: 'error', error, provenance }
-      return
-    }
-    idea = sampleResult('tmp').solution_idea
-    yield { stage: 'extract', solution_idea: { concept: idea.concept, key_elements: [idea.key_elements![0], ''] as [string, string] }, provenance }
-    await sleep(700, signal)
-    yield { stage: 'extract', solution_idea: idea, provenance }
-    await sleep(500, signal)
-  }
-
-  yield { stage: 'validate', solution_idea: idea, provenance }
+  const idea = sampleResult('tmp').solution_idea
+  yield { stage: 'extract', solution_idea: { concept: idea.concept, key_elements: [idea.key_elements![0], ''] as [string, string] } }
+  await sleep(700, signal)
+  yield { stage: 'extract', solution_idea: { concept: idea.concept, key_elements: idea.key_elements } }
   await sleep(600, signal)
-  yield { stage: 'generate', solution_idea: idea, provenance }
+  yield { stage: 'extract', solution_idea: idea }
+  await sleep(500, signal)
+  yield { stage: 'validate', solution_idea: idea }
+  await sleep(700, signal)
+  yield { stage: 'generate', solution_idea: idea }
   await sleep(2600, signal)
-  yield { stage: 'review', solution_idea: idea, provenance }
+  yield { stage: 'review', solution_idea: idea }
   await sleep(1800, signal)
 
   const resultId = id('res')
@@ -210,13 +159,10 @@ export async function* jobEvents(jobId: string, signal?: AbortSignal): AsyncGene
       solution: expl.text && expl.text.length > 40 ? expl.text : SAMPLE_SOURCE.solution,
     },
   })
-  result.solution_idea = idea
-  result.provenance = provenance
   store.results[resultId] = result
   job.result_id = resultId
-  PENDING.delete(jobId)
   save(store)
-  yield { stage: 'done', result_id: resultId, solution_idea: idea, provenance }
+  yield { stage: 'done', result_id: resultId, solution_idea: idea }
 }
 
 /** GET /api/results/:id */

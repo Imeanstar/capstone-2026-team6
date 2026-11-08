@@ -61,8 +61,6 @@
 .g__role[data-role="사람"] { color: var(--g-gold); border-color: color-mix(in oklab, var(--g-gold) 50%, transparent); }
 .g__card-mid { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); }
 .g__engine { font-size: 10px; color: var(--g-muted); padding: var(--space-3xs) var(--space-xs); border-radius: 3px; background: var(--g-pill); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.g__engine[data-src="stored"] { color: var(--g-gold); border: 1px dashed color-mix(in oklab, var(--g-gold) 55%, transparent); background: transparent; }
-.g__engine[data-src="live"] { color: var(--g-pass); }
 .g__status { font-size: 10px; color: var(--g-muted); white-space: nowrap; }
 .g__status[data-state="running"] { color: var(--g-white); background: var(--g-run); padding: var(--space-3xs) var(--space-xs); border-radius: 3px; }
 .g__status[data-state="done"] { color: var(--g-pass); }

@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import type { JobStage, Provenance, QuestionError, SolutionIdea } from '../../api/types'
+import type { JobStage, QuestionError, SolutionIdea } from '../../api/types'
 import { buildGraph, stageStates, WORLD, type Edge, type GNode, type NodeState } from './model'
 import './graph.css'
 
@@ -72,7 +72,7 @@ for (const e of GRAPH.edges) {
   ;(OUT_EDGES[e.from] ??= []).push(e)
 }
 
-export function NodeGraph({ stage, idea, error, durations, provenance }: { stage: JobStage; idea: Partial<SolutionIdea>; error: QuestionError | null; durations: Partial<Record<string, number>>; provenance: Provenance }) {
+export function NodeGraph({ stage, idea, error, durations }: { stage: JobStage; idea: Partial<SolutionIdea>; error: QuestionError | null; durations: Partial<Record<string, number>> }) {
   const root = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const [scale, setScale] = useState(1)
@@ -315,8 +315,6 @@ export function NodeGraph({ stage, idea, error, durations, provenance }: { stage
             const gc = GRAPH.groups.find((g) => g.id === n.group)?.color
             const found = ideaText(n)
             const dur = n.stage ? durations[n.stage] : undefined
-            const src = n.stage && n.stage !== 'done' && n.stage !== 'error' ? provenance[n.stage] : undefined
-            const engine = src === 'live' && n.role === 'AI' && provenance.model ? provenance.model : n.engine
             return (
               <div key={n.id} className="g__card" data-state={s} data-flash={fl} style={{ ...style, ['--gc' as string]: gc }}>
                 <span className="g__port g__port--in" aria-hidden="true" />
@@ -329,9 +327,7 @@ export function NodeGraph({ stage, idea, error, durations, provenance }: { stage
                   </span>
                 </div>
                 <div className="g__card-mid">
-                  <span className="g__engine" data-src={src}>
-                    {src === 'stored' ? '저장된 응답' : engine}
-                  </span>
+                  <span className="g__engine">{n.engine}</span>
                   <span className="g__status" data-state={s}>
                     {s === 'pending' && '대기'}
                     {s === 'running' && '실행 중'}

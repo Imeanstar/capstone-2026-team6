@@ -15,11 +15,6 @@ export function PlainView({ result }: { result: GenerationResult }) {
   return (
     <article className="sheet">
       <ResultHead onOpenSource={() => dialog.current?.showModal()} />
-      <p className="prov">
-        {result.provenance.extract === 'live'
-          ? `풀이 요소 추출과 구조 검증은 실제 실행(${result.provenance.model ?? '모델'}), 후보 생성과 잠정 검토는 저장된 응답(골든 케이스 01)입니다.`
-          : '풀이 요소 추출, 후보 생성, 잠정 검토 모두 저장된 응답(골든 케이스 01)입니다.'}
-      </p>
       <SourceDialog ref={dialog} result={result} />
       <section className="sheet__candidates" aria-label="후보 문항">
         {candidates.map((c, i) => (

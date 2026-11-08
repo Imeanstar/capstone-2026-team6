@@ -70,7 +70,6 @@ export interface GenerationResult {
   request: Omit<GenerationRequest, 'source_question'> & { source: SourceSummary }
   solution_idea: SolutionIdea
   candidates: CandidateQuestion[]
-  provenance: Provenance
 }
 
 export type QuestionErrorCode = 'MISSING_ELEMENTS' | 'MISSING_MECHANISM' | 'UNREADABLE_INPUT' | 'INPUT_CONFLICT'
@@ -86,16 +85,10 @@ export interface QuestionError {
 /** Pipeline stages the job streams while it runs. */
 export type JobStage = 'read' | 'extract' | 'validate' | 'generate' | 'review' | 'done' | 'error'
 
-/** Where a stage's output came from: the live model/code, or a stored response shown in its place. */
-export type Source = 'live' | 'stored'
-export type Provenance = Partial<Record<Exclude<JobStage, 'done' | 'error'>, Source>> & { model?: string; note?: string }
-
 export interface JobEvent {
   stage: JobStage
   /** Filled once the parser has an idea; partial while it streams. */
   solution_idea?: Partial<SolutionIdea>
   result_id?: string
   error?: QuestionError
-  /** Which stages so far were live and which stored. */
-  provenance?: Provenance
 }
