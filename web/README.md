@@ -30,13 +30,35 @@ VITE_ROUTER=hash VITE_BASE=./ npx vite build
 | `/jobs/:id` | 추출과 생성 | 관제 패널형 노드 그래프: 입력 알약 → 원문 허브 → 읽기·추출·구조 검증·후보 생성·잠정 검토 구간의 노드 카드 → 후보별 검토 항목 칩 → 완료 고리. 담당(AI·코드·사람)을 표시하고, 단계 이벤트가 올 때만 빛이 전선을 타고 흐름(`src/components/graph/`). 경과 시간과 단계별 실측 시간. 두 요소를 못 찾으면 그 노드가 빨갛게 멈추고 뒤쪽은 막힘(AC2), 판독 불가면 읽기 노드에서 멈춤(AC9). |
 | `/results/:id` | 검토 결과 | 원문 + 풀이 아이디어, 후보별 문항·풀이·`ReviewResult`(잠정). 강사가 직접 승인/수정/보류/폐기를 기록하면 `reviewer_type=SELF`, 승인만 `APPROVED`. |
 
-### 모의 API가 흉내 내는 규칙
+### 실제 실행과 저장된 응답
 
-- 해설 텍스트가 40자 미만이면 요소 하나만 확인된 것으로 보고 `MISSING_ELEMENTS`를 돌려줍니다.
+`web/worker/`의 Cloudflare Worker가 사이트와 `/api`를 함께 서비스합니다.
+
+- `POST /api/extract`: 풀이 요소 추출을 **실제로** 실행합니다. 저장소의 `src/aleph/prompts/parse_query.md` 전송부(빌드 때 `scripts/sync-prompt.mjs`가 `worker/prompt.generated.ts`로 복사)를 시스템 프롬프트로 Claude(`claude-opus-5-5`)에 보내고, 원출력을 `worker/validate.ts`(`validate_solution_idea`의 TypeScript 포트, 같은 6단계 검사·오류 코드)로 검증해 `{status, error_code, reason, solution_idea}`를 돌려줍니다. JSON·스키마 오류만 1회 재요청하고, 두 요소 부족은 `QUESTION_ERROR`로 그대로 돌려줍니다(AC2). 이미지는 base64로 함께 보냅니다(5 MB 이하).
+- `GET /api/health`: 모델, 키 설정 여부, 프롬프트 버전.
+- 후보 생성과 잠정 검토는 아직 서버가 없어 **저장된 응답**(골든 케이스 01)을 쓰고, 분석 화면과 결과 화면에 그 사실을 표시합니다. API에 닿지 못하면(키 없음, 네트워크) 추출도 저장된 응답으로 대체하고 역시 표시합니다.
+
+### 배포 (Cloudflare Workers)
+
+```bash
+cd web
+npm install
+npx wrangler login
+npx wrangler secret put ANTHROPIC_API_KEY   # 키를 붙여 넣음
+npm run deploy                              # sync-prompt → vite build → wrangler deploy
+```
+
+`wrangler.jsonc`의 Worker 이름은 `aleph`(현재 배포 주소 `aleph.aleph-web.workers.dev`)이고, 정적 파일은 `dist/`에서, 알 수 없는 경로는 `index.html`로 돌려줍니다(SPA fallback). 모델은 `vars.ANTHROPIC_MODEL`로 바꿉니다.
+
+로컬에서 API까지 보려면 터미널 둘: `npm run dev:api`(Worker, 8787)와 `npm run dev`(Vite, 5173, `/api`를 8787로 프록시). 로컬 키는 `web/.dev.vars`에 `ANTHROPIC_API_KEY=...`로 둡니다(커밋 금지, `.gitignore`에 포함).
+
+## 모의 API가 흉내 내는 규칙 (후보 생성·검토)
+
+- (추출 API를 쓰지 못할 때만) 해설 텍스트가 40자 미만이면 요소 하나만 확인된 것으로 보고 `MISSING_ELEMENTS`를 돌려줍니다.
 - 이미지 파일명에 `blur`, `흐림`, `low`가 들어 있으면 `UNREADABLE_INPUT`과 확인 항목을 돌려줍니다.
 - 그 외에는 `tests/harness/golden_cases.yaml`의 recorded_output_01과 같은 풀이 아이디어로 후보 2개(USE 1, REVISE 1)를 만듭니다.
 
-실제 서버를 붙일 때는 `src/api/mock.ts`의 네 함수(`createJob`, `jobEvents`, `getResult`, `recordHumanReview`)만 바꾸면 됩니다. 진행 이벤트는 SSE나 WebSocket으로 대체할 수 있도록 async generator 형태입니다.
+후보 생성·검토 서버가 생기면 `src/api/mock.ts`의 `jobEvents`에서 해당 단계만 실제 호출로 바꾸고 `provenance`를 `live`로 표시하면 됩니다. 진행 이벤트는 SSE나 WebSocket으로 대체할 수 있도록 async generator 형태입니다.
 
 ## 구조
 

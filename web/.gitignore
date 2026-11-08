@@ -1,3 +1,6 @@
 node_modules
 dist
 .hallmark/before
+.dev.vars
+.wrangler
+dist-artifact

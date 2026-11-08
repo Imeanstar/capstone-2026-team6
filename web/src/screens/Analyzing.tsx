@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CircleAlert } from 'lucide-react'
 import { jobEvents } from '../api/mock'
-import type { JobEvent, JobStage, QuestionError, SolutionIdea } from '../api/types'
+import type { JobEvent, JobStage, Provenance, QuestionError, SolutionIdea } from '../api/types'
 import { MathText } from '../components/Math'
 import { NodeGraph } from '../components/graph/NodeGraph'
 import { failedIds } from '../components/graph/model'
@@ -31,6 +31,7 @@ export function Analyzing() {
   const [error, setError] = useState<QuestionError | null>(null)
   const [elapsed, setElapsed] = useState(0)
   const [durations, setDurations] = useState<Partial<Record<string, number>>>({})
+  const [provenance, setProvenance] = useState<Provenance>({})
   const startedAt = useRef(performance.now())
   const stageStarted = useRef<{ stage: JobStage; at: number }>({ stage: 'read', at: performance.now() })
 
@@ -68,6 +69,7 @@ export function Analyzing() {
         return ev.stage
       })
       if (ev.solution_idea) setIdea((prev) => ({ ...prev, ...ev.solution_idea }))
+      if (ev.provenance) setProvenance(ev.provenance)
       if (ev.error) setError(ev.error)
     }
     return () => {
@@ -98,7 +100,14 @@ export function Analyzing() {
           </p>
         </div>
 
-        <NodeGraph stage={stage} idea={idea} error={error} durations={durations} />
+        <NodeGraph stage={stage} idea={idea} error={error} durations={durations} provenance={provenance} />
+        <p className="prov" aria-live="polite">
+          {provenance.extract === 'live'
+            ? `풀이 요소 추출과 구조 검증은 실제 실행입니다(${provenance.model ?? '모델'}). 후보 생성과 잠정 검토는 저장된 응답입니다.`
+            : provenance.note
+              ? `${provenance.note} 후보 생성과 잠정 검토도 저장된 응답입니다.`
+              : '후보 생성과 잠정 검토는 저장된 응답입니다.'}
+        </p>
 
         <div className="job">
           <aside className="job__source" aria-label="원문" data-busy={busy}>

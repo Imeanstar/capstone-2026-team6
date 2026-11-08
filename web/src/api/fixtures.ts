@@ -90,5 +90,6 @@ export function sampleResult(id: string, overrides?: Partial<GenerationResult['r
     },
     solution_idea: SAMPLE_IDEA,
     candidates: SAMPLE_CANDIDATES.map((c) => ({ ...c, review_result: { ...c.review_result } })),
+    provenance: { read: 'stored', extract: 'stored', validate: 'stored', generate: 'stored', review: 'stored' },
   }
 }
